@@ -40,7 +40,7 @@ let rec step t =
 (* Problem 1b. *)
 
 let rec eval t =
-  if (isval t) then t else (try eval (step t) with NormalForm -> t)
+  try eval (step t) with NormalForm -> t
 
 (* eval(If(If(True, False, True), False, True));;  ==> true *)
 (* eval(If(GT(True, Int 1), True, False));; ==> self *)
