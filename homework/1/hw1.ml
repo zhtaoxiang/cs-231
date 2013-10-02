@@ -1,6 +1,5 @@
 
 exception ImplementMe
-exception StepError
 
 type t = True | False | If of t * t * t | Int of int | Plus of t * t | GT of t * t
 
@@ -31,7 +30,7 @@ let rec step t =
           (Int n1, Int n2) -> (if n1 > n2 then True else False)
         | (Int n, t) -> GT(Int n, step t)
         | (t1, t2) -> GT(step t1, t2))
-    | _ -> raise StepError
+    | _ -> raise NormalForm
 
 (* step(Plus(Int 1, Int 2));; *)
 (* step(Plus(Plus(Int 1, Int 3), Int 2));; *)
@@ -39,5 +38,7 @@ let rec step t =
 (* step(If(GT(Int 1, Int 3), True, False));; *)
 
 (* Problem 1b. *)
+
+
 
 let rec eval t = raise ImplementMe
