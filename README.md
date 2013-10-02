@@ -23,3 +23,9 @@ ocaml /vagrant/homework/1/hw1.ml
 ## LaTeX
 
 *TODO* List of packages.
+
+
+## Questions
+
+1. Why do we need `isval`? The NormalForm exception seems to be enough.
+2. Should we be catching the NormalForm or bubbling it
