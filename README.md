@@ -15,7 +15,7 @@ vagrant ssh
 The first command will build the VM and share the project directory with it, the second step will install ocaml, and the third will allow you to enter the VM and run commands. For example, after running `vagrant ssh` on the host you might do the following to test that it works:
 
 ```
-cd /vagrant; # enter the project directory shared into the VM
+# files are shared in /vagrant from the project directory
 ocaml /vagrant/homework/1/hw1.ml
 
 ```
