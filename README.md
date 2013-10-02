@@ -4,7 +4,7 @@ This repository includes the latex and SML coursework assignments assigned for C
 
 ## Vagrant
 
-If you don't want to install SML on your machine you can download and install VirtualBox and [Vagrant](http://vagrantup.com) to automate the setup of a VM with SML. After installing both from the root directory run
+If you don't want to install ocaml on your machine you can download and install VirtualBox and [Vagrant](http://vagrantup.com) to automate the setup of a VM. After installing both from the root directory run
 
 ```
 vagrant up
@@ -12,7 +12,13 @@ vagrant provision
 vagrant ssh
 ```
 
-The first command will build the VM and share the project directory with it, the second step will install SML (*TODO*), and the third will allow you to enter the VM and run commands.
+The first command will build the VM and share the project directory with it, the second step will install ocaml, and the third will allow you to enter the VM and run commands. For example, after running `vagrant ssh` on the host you might do the following to test that it works:
+
+```
+cd /vagrant; # enter the project directory shared into the VM
+ocaml /vagrant/homework/1/hw1.ml
+
+```
 
 ## LaTeX
 
