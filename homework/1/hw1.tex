@@ -41,7 +41,7 @@
     \textit{Induction Hypothesis.} For every \verb|t|$_0$ that is a subterm of \verb|t|, either \verb|t|$_0$  is a value or there exists a term \verb|t|$_0'$  such that \verb|t|$_0$  $\longrightarrow$ \verb|t|$_0'$ .
 
     \begin{proof}
-      Proceed by case analysis on \verb|t|. \verb|true| is a value. \verb|false| is a value. For \verb|if t|$_1$ \verb|then t|$_2$ \verb|else t|$_3$ by the inductive hypothesis \verb|t|$_1$ is either a value, \verb|true| or \verb|false| and E-IfTrue or E-IfFalse apply or \verb|t|$_1$ can take a step to \verb|t|$_1'$ and E-If applies.
+      We proceed by case analysis on the structure of \verb|t|. \verb|true| is a value. \verb|false| is a value. For \verb|if t|$_1$ \verb|then t|$_2$ \verb|else t|$_3$ by the inductive hypothesis \verb|t|$_1$ is either a value, \verb|true| or \verb|false| and E-IfTrue or E-IfFalse apply or \verb|t|$_1$ can take a step to \verb|t|$_1'$ and E-If applies.
     \end{proof}
 
   \item[3]{Induction Hypothesis for Proof of Progress}
@@ -53,13 +53,13 @@
 
     \inferax{E-IfFalse}{\step{if false then v$_2$ else v$_3$}{v$_3$}}
 
-    \inferrule{E-If}{\step{t$_2$}{t$_2'$}}
+    \inferrule{E-IfThen}{\step{t$_2$}{t$_2'$}}
     {\step{if t$_1$ then t$_2$ else t$_3$}{if t$_1$ then t$_2'$ else t$_3$}}
 
-    \inferrule{E-If}{\step{t$_3$}{t$_3'$}}
+    \inferrule{E-IfElse}{\step{t$_3$}{t$_3'$}}
     {\step{if t$_1$ then v$_2$ else t$_3$}{if t$_1$ then v$_2$ else t$_3'$}}
 
-    \inferrule{E-If}{\step{t$_1$}{t$_1'$}}
+    \inferrule{E-IfGuard}{\step{t$_1$}{t$_1'$}}
     {\step{if t$_1$ then v$_2$ else v$_3$}{if t$_1'$ then v$_2$ else v$_3$}}
 
 \newpage
