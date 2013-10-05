@@ -6,9 +6,9 @@ build(){
 }
 
 # build once by default
-build hw1.tex
+build $1
 
 # watch for alterations
-while inotifywait hw1.tex; do
-  build hw1.tex
+while inotifywait $1; do
+  build $1
 done

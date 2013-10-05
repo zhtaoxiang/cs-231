@@ -22,8 +22,19 @@ ocaml /vagrant/homework/1/hw1.ml
 
 ## LaTeX
 
-*TODO* List of packages.
+The home work latex files can be automatically watched an built on systems supporting `inotify` and `inotifywait`/`pdflatex` commands as follows:
 
+```
+bash bin/watch.sh homework/<assignment number>/homework.tex
+```
+
+So far the packages used are
+
+* bcprules
+* amsthm
+* syntax
+
+The first is in the project the others must be available in the LaTeX distribution used with `pdflatex`.
 
 ## Questions
 
