@@ -92,6 +92,32 @@
 
           By the inductive hypothesis we know for any \verb|t|$_1$ $\longrightarrow$ \verb|t|$_1'$ and \verb|t|$_1$ $\longrightarrow$ \verb|t|$_1''$, that \verb|t|$_1'$ = \verb|t|$_1''$. Since both \verb|t|$_2$ and \verb|t|$_3$ are preserved, \verb|t|$'$ and \verb|t|$''$ must be the same, \verb|if t|$_1'$ \verb|then t|$_2$ \verb|else t|$_3$.
       \end{enumerate}
+
+      ----
+
+      The last rule in derivation of \verb|t| $\longrightarrow$ \verb|t|$'$ can be 3 cases:
+      \begin{enumerate} 
+        \item E-IfTrue: \verb|t|$_1$ must be \verb|true| and \verb|t| has the form
+        \verb|if t|$_1$ \verb|then t|$_2$ \verb|else t|$_3$.
+          The last rule in derivation of \verb|t| $\longrightarrow$ \verb|t|$''$ can be 3 cases:
+          \begin{enumerate} 
+            \item E-IfFalse: \verb|t|$_1$ is \verb|false|, which is a contradiction since \verb|t|$_1$ is assumed to be \verb|true|.
+            \item E-If: \verb|t|$_1$ cannot take a step because \verb|true| is a value, contradiction.
+            \item E-IfTrue: since \verb|t|$_1$ is \verb|true|, we can step to \verb|t|$_3$, therefore \verb|t|$'$ = \verb|t|$''$.
+          \end{enumerate}
+
+        \item E-IfFalse: A similar argument holds.
+
+        \item E-If: \verb|t|$_1$ must take a step to some \verb|t|$_1'$, and \verb|t| has the form
+        \verb|if t|$_1$ \verb|then t|$_2$ \verb|else t|$_3$.
+        The last rule in derivation of \verb|t| $\longrightarrow$ \verb|t|$''$ can be 3 cases:
+          \begin{enumerate} 
+            \item E-IfTrue: \verb|t|$_1$ is \verb|true|, and values can't take a step.
+            \item E-IfFalse: A similar argument holds.
+            \item E-If: then \verb|t|$_1$ must take a step to some \verb|t|$_1''$. By the inductive hypothesis, since we know \verb|t|$_1$ steps to both \verb|t|$_1'$ and \verb|t|$_1''$, 
+            then \verb|t|$_1'$ and \verb|t|$_1''$ must be the same.
+            \end{enumerate}
+      \end{enumerate}
     \end{proof}
 
   \item[6]{Induction Hypothesis for Proof of Determinism}
