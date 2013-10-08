@@ -71,13 +71,27 @@
     \textit{Induction Hypothesis.} If \verb|t|$_0$ $\longrightarrow$ \verb|t|$_0'$ , \verb|t|$_0$ $\longrightarrow$ \verb|t|$_0''$, and \verb|t|$_0$ $\longrightarrow$ \verb|t|$_0'$ is a sub-derivation of \verb|t| $\longrightarrow$ \verb|t|$'$, then \verb|t|$_0'$ = \verb|t|$_0''$.
 
     \begin{proof}
-      We proceed by case analysis on the structure of \verb|t| $\longrightarrow$ \verb|t|$'$, show that only one derivation can apply at a time, and that there is only one possible result for each derivation.
+      We proceed by case analysis on the structure of \verb|t| $\longrightarrow$ \verb|t|$'$, show that only one derivation can apply, and show that there is only one outcome for each.
 
-      If E-IfTrue applies then \verb|t|$_1$ must be \verb|true| so E-IfFalse cannot apply and E-If cannot apply because \verb|true| can't take a step as required in the premise. \verb|t|$_2$ is preserved under E-IfTrue so that is the only possible result.
+      \begin{enumerate}
+        \item E-IfTrue: \verb|t|$_1$ must be \verb|true|, and we address the other two cases:
+          \begin{enumerate}
+            \item E-IfFalse: \verb|t|$_1$ is \verb|false|, a contradiction.
+            \item E-If: \verb|t|$_1$ must take a step but \verb|true| is a value.
+          \end{enumerate}
 
-      A similar argument holds for E-IfFalse.
+          Finally, \verb|t|$_2$ is preserved by E-IfTrue so \verb|t|$'$ and \verb|t|$''$ must be \verb|t|$_2$.
 
-      If E-If applies then \verb|t|$_1$ must take a step so neither E-IfTrue nor E-IfFalse can apply because they require that \verb|t|$_1$ be a value \verb|true| or \verb|false|. By the inductive hypothesis \verb|t|$_1$ $\longrightarrow$ \verb|t|$_1'$ is deterministic, and both \verb|t|$_2$ and \verb|t|$_3$ are preserved so there is only one possible outcome for \verb|if t|$_1'$ \verb|then t|$_2$ \verb|else t|$_3$.
+        \item E-IfFalse: A similar argument holds.
+
+        \item E-If: \verb|t|$_1$ must take a step so we address the other two cases:
+          \begin{enumerate}
+            \item E-IfTrue: \verb|t|$_1$ is \verb|true|, and can't take a step.
+            \item E-IfFalse: A similar argument holds.
+          \end{enumerate}
+
+          By the inductive hypothesis we know for any \verb|t|$_1$ $\longrightarrow$ \verb|t|$_1'$ and \verb|t|$_1$ $\longrightarrow$ \verb|t|$_1''$, that \verb|t|$_1'$ = \verb|t|$_1''$. Since both \verb|t|$_2$ and \verb|t|$_3$ are preserved, \verb|t|$'$ and \verb|t|$''$ must be the same, \verb|if t|$_1'$ \verb|then t|$_2$ \verb|else t|$_3$.
+      \end{enumerate}
     \end{proof}
 
   \item[6]{Induction Hypothesis for Proof of Determinism}
