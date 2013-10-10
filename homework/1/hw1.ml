@@ -1,3 +1,6 @@
+(* John Bender and Lorenzo Gomez, CS231 *)
+(* October 8th, 2013 *)
+
 exception NormalForm
 
 type t = True | False | If of t * t * t | Int of int | Plus of t * t | GT of t * t
