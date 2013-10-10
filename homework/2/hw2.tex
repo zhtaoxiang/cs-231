@@ -1,0 +1,132 @@
+\documentclass{article}
+\topmargin = 0in
+\oddsidemargin = 0in
+\evensidemargin = \oddsidemargin
+\textwidth = 6.5in
+\textheight = 8in
+\usepackage{times}
+\usepackage{bcprules}
+\usepackage{amsthm}
+\usepackage{syntax}
+
+\renewcommand{\syntleft}{\normalfont\itshape}
+\renewcommand{\syntright}{}
+
+\newcommand{\step}[2]{{\tt #1} $\longrightarrow$ {\tt #2}}
+\newcommand{\eval}[2]{{\tt #1} $\Downarrow$ {\tt #2}}
+\newcommand{\tc}[3]{{\tt #1} $\vdash$ {\tt #2} \ : \ {\tt #3}}
+\newcommand{\tcDef}[2]{{\tt #1}\ : \ {\tt #2}}
+
+\newcommand{\inferrule}[3]{\infrule[#1]{\mbox{#2}}{\mbox{#3}}}
+\newcommand{\inferax}[2]{\infrule[#1]{\mbox{}}{\mbox{#2}}}
+
+\title{Homework 1}
+
+\author{John Bender and Lorenzo Gomez, CS 231}
+
+\date{October 8th, 2013}
+
+\newtheorem{prog}{Progress}
+\newtheorem{deter}{Determinism}
+
+\begin{document}
+
+\maketitle
+
+\begin{description}
+  \item[2]{Proof of Progress}
+    \begin{prog}For every \verb|t|, either \verb|t| is a value or there exists a term \verb|t'| such that \verb|t| $\longrightarrow$ \verb|t'|.
+    \end{prog}
+
+    \textit{Induction Hypothesis.} For every \verb|t|$_0$ that is a subterm of \verb|t|, either \verb|t|$_0$  is a value or there exists a term \verb|t|$_0'$  such that \verb|t|$_0$  $\longrightarrow$ \verb|t|$_0'$ .
+
+    \begin{proof}
+      We proceed by case analysis on the structure of \verb|t|. \verb|true| is a value. \verb|false| is a value. For \verb|if t|$_1$ \verb|then t|$_2$ \verb|else t|$_3$ by the inductive hypothesis \verb|t|$_1$ is either a value, \verb|true| or \verb|false| and E-IfTrue or E-IfFalse apply or \verb|t|$_1$ can take a step to \verb|t|$_1'$ and E-If applies.
+    \end{proof}
+
+  \item[3]{Induction Hypothesis for Proof of Progress}
+    \vspace{0.3cm}\\
+    \textit{Induction Hypothesis.} For every \verb|t|$_0$ that is a subterm of \verb|t|, either \verb|t|$_0$  is a value or there exists a term \verb|t|$_0'$  such that \verb|t|$_0$  $\longrightarrow$ \verb|t|$_0'$ .
+
+  \item[4]{Modified Semantics}
+    \inferax{E-IfTrue}{\step{if true then v$_2$ else v$_3$}{v$_2$}}
+
+    \inferax{E-IfFalse}{\step{if false then v$_2$ else v$_3$}{v$_3$}}
+
+    \inferrule{E-IfThen}{\step{t$_2$}{t$_2'$}}
+    {\step{if t$_1$ then t$_2$ else t$_3$}{if t$_1$ then t$_2'$ else t$_3$}}
+
+    \inferrule{E-IfElse}{\step{t$_3$}{t$_3'$}}
+    {\step{if t$_1$ then v$_2$ else t$_3$}{if t$_1$ then v$_2$ else t$_3'$}}
+
+    \inferrule{E-IfGuard}{\step{t$_1$}{t$_1'$}}
+    {\step{if t$_1$ then v$_2$ else v$_3$}{if t$_1'$ then v$_2$ else v$_3$}}
+
+\newpage
+
+  \item[5]{Proof of Determinism}
+    \begin{deter}If \verb|t| $\longrightarrow$ \verb|t|$'$ and \verb|t| $\longrightarrow$ \verb|t|$''$, then \verb|t|$'$=\verb|t|$''$.
+    \end{deter}
+
+    \textit{Induction Hypothesis.} If \verb|t|$_0$ $\longrightarrow$ \verb|t|$_0'$ , \verb|t|$_0$ $\longrightarrow$ \verb|t|$_0''$, and \verb|t|$_0$ $\longrightarrow$ \verb|t|$_0'$ is a sub-derivation of \verb|t| $\longrightarrow$ \verb|t|$'$, then \verb|t|$_0'$ = \verb|t|$_0''$.
+
+    \begin{proof}
+      The last rule in derivation of \verb|t| $\longrightarrow$ \verb|t|$'$ can be 3 cases:
+      \begin{enumerate}
+        \item E-IfTrue: \verb|t|$_1$ must be \verb|true| and \verb|t| has the form
+        \verb|if t|$_1$ \verb|then t|$_2$ \verb|else t|$_3$.
+          The last rule in derivation of \verb|t| $\longrightarrow$ \verb|t|$''$ can be 3 cases:
+          \begin{enumerate}
+            \item E-IfFalse: \verb|t|$_1$ is \verb|false|, which is a contradiction since \verb|t|$_1$ is assumed to be \verb|true|.
+            \item E-If: \verb|t|$_1$ cannot take a step because \verb|true| is a value, contradiction.
+            \item E-IfTrue: since \verb|t|$_1$ is \verb|true|, we can step to \verb|t|$_3$, therefore \verb|t|$'$ = \verb|t|$''$.
+          \end{enumerate}
+
+        \item E-IfFalse: A similar argument holds.
+
+        \item E-If: \verb|t|$_1$ must take a step to some \verb|t|$_1'$, and \verb|t| has the form
+        \verb|if t|$_1$ \verb|then t|$_2$ \verb|else t|$_3$.
+        The last rule in derivation of \verb|t| $\longrightarrow$ \verb|t|$''$ can be 3 cases:
+          \begin{enumerate}
+            \item E-IfTrue: \verb|t|$_1$ is \verb|true|, and values can't take a step.
+            \item E-IfFalse: A similar argument holds.
+            \item E-If: then \verb|t|$_1$ must take a step to some \verb|t|$_1''$. By the inductive hypothesis, since we know \verb|t|$_1$ steps to both \verb|t|$_1'$ and \verb|t|$_1''$,
+            then \verb|t|$_1'$ and \verb|t|$_1''$ must be the same.
+            \end{enumerate}
+      \end{enumerate}
+    \end{proof}
+
+  \item[6]{Induction Hypothesis for Proof of Determinism}
+    \vspace{0.3cm}\\
+    \textit{Induction Hypothesis.} If \verb|t|$_0$ $\longrightarrow$ \verb|t|$_0'$ , \verb|t|$_0$ $\longrightarrow$ \verb|t|$_0''$, and \verb|t|$_0$ $\longrightarrow$ \verb|t|$_0'$ is a sub-derivation of \verb|t| $\longrightarrow$ \verb|t|$'$, then \verb|t|$_0'$ = \verb|t|$_0''$.
+
+  \item[7]{Addition of Stuck Terms to BNF}
+
+    \begin{grammar}
+      <s> :=  <b>  \lit*{+} <n> | <n> \lit*{+} <b> | <b> \lit*{+} <b>
+      \alt <b>  \lit*{>} <n> | <n> \lit*{>} <b> | <b> \lit*{>} <b>
+      \alt \lit*{if} <n> \lit*{then} <t> \lit*{else} <t>
+
+      <b> := \lit*{true} | \lit*{false}
+
+      <n> := \ldots | \lit*{-1} | \lit*{0} | \lit*{1} | \ldots
+
+      <t> := <t> \lit*{+} <t> | <t> \lit*{>} <t> | \lit*{if} <t> \lit*{then} <t> \lit*{else} <t>
+    \end{grammar}
+
+  \item[8]{Stuck Terms, Old vs. New Semantics}
+    \begin{description}
+      \item[(a)] \verb|if 1 then (1 > 2) else false|
+      \item[(b)] \verb|if true then false else (true > 1)|
+    \end{description}
+
+  \item[9]{Eventually Stuck Terms, Old vs. New Semantics}
+    \begin{description}
+      \item[(a)] None. In the original semantics eventually stuck terms can exist at \verb|t|$_1$ and either \verb|t|$_2$ or \verb|t|$_3$ in an \verb|if|, but not both. In the modified semantics stuck terms can arise for all three sub-terms of an \verb|if|. So, the set of eventually stuck terms from the modified semantics forms a proper superset of those from the original semantics.
+      \item[(b)] \verb|if true then (1 > 0) else (true > 1)|
+    \end{description}
+
+
+\end{description}
+
+\end{document}
