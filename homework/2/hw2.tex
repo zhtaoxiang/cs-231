@@ -8,6 +8,8 @@
 \usepackage{bcprules}
 \usepackage{amsthm}
 \usepackage{syntax}
+\usepackage{trfrac}
+\usepackage{mathtools}
 
 \renewcommand{\syntleft}{\normalfont\itshape}
 \renewcommand{\syntright}{}
@@ -20,11 +22,11 @@
 \newcommand{\inferrule}[3]{\infrule[#1]{\mbox{#2}}{\mbox{#3}}}
 \newcommand{\inferax}[2]{\infrule[#1]{\mbox{}}{\mbox{#2}}}
 
-\title{Homework 1}
+\title{Homework 2}
 
 \author{John Bender and Lorenzo Gomez, CS 231}
 
-\date{October 8th, 2013}
+\date{October 17th, 2013}
 
 \newtheorem{prog}{Progress}
 \newtheorem{deter}{Determinism}
@@ -34,6 +36,22 @@
 \maketitle
 
 \begin{description}
+  \begin{enumerate}
+  \item Call-by-value Lambda Calculus
+    \begin{enumerate}
+      \item $x\ (\lambda x.x)$
+      \item $((\lambda x. x)\ \lambda y.y)\ r)\ (\lambda q. q)$
+      \item $((\lambda x. x)\ \lambda y.y)\ r)\ (\lambda q. q)$ \\
+        \begin{equation*}
+          \trfrac[app]{
+            ((\lambda x. x)\ \lambda y.y)\ r) \longrightarrow (\lambda y.y)\ r
+          }{
+            ((\lambda x. x)\ \lambda y.y)\ r)\ (\lambda q. q) \longrightarrow ((\lambda y.y)\ r)\ (\lambda q. q)
+          }
+        \end{equation*}
+
+    \end{enumerate}
+
   \item[2]{Proof of Progress}
     \begin{prog}For every \verb|t|, either \verb|t| is a value or there exists a term \verb|t'| such that \verb|t| $\longrightarrow$ \verb|t'|.
     \end{prog}
