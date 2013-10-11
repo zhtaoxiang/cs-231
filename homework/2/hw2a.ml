@@ -24,12 +24,10 @@ let rec subst (x:string) (v:t) (t:t) =
       True -> True
     | Var name ->
       (if name = x then v else t)
-    | Function(arg, body) ->
-      (if arg = x then t else Function(arg, (subst x v body)))
-    | FunCall(fn, arg) ->
-      (FunCall((subst x v fn), (subst x v arg))))
-
-
+    | Function(var, body) ->
+      (if var = x then t else Function(var, (subst x v body)))
+    | FunCall(l, r) ->
+      (FunCall((subst x v l), (subst x v r))))
 
 (* 3b: Implement the step function, which takes a term of type t above
 and produces a new term that results from taking one step of
@@ -38,4 +36,10 @@ raise the NormalForm exception declared below. *)
 
 exception NormalForm
 
-let rec step t = raise ImplementMe
+let rec step t =
+  (match t with
+      True -> raise NormalForm
+    | Var(_) -> raise NormalForm
+    | Function(_, _) -> raise NormalForm
+    | FunCall(Function(var, body), arg) -> subst var arg body
+    | FunCall(l, r) -> FunCall(step l, r))
