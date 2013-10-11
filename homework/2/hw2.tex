@@ -41,14 +41,26 @@
     \begin{enumerate}
       \item $x\ (\lambda x.x)$
       \item $((\lambda x. x)\ \lambda y.y)\ r)\ (\lambda q. q)$
-      \item $((\lambda x. x)\ \lambda y.y)\ r)\ (\lambda q. q)$ \\
+      \item $(((\lambda x. x)\ s)\ r)\ q)\ p$
         \begin{equation*}
-          \trfrac[app]{
-            ((\lambda x. x)\ \lambda y.y)\ r) \longrightarrow (\lambda y.y)\ r
+          \trfrac[app-left] {
+          \trfrac[app-left]{
+            \trfrac[app-left]{
+              \trfrac[beta]{}{
+                (\lambda x. x)\ s \longrightarrow s
+              }
+            }{
+              (\lambda x. x)\ s)\ r \longrightarrow s\ r
+            }
           }{
-            ((\lambda x. x)\ \lambda y.y)\ r)\ (\lambda q. q) \longrightarrow ((\lambda y.y)\ r)\ (\lambda q. q)
+            ((\lambda x. x)\ s)\ r)\ q \longrightarrow (s\ r)\ q
+          }
+          }{
+            (((\lambda x. x)\ s)\ r)\ q)\ p \longrightarrow
+            ((s\ r)\ q)\ p
           }
         \end{equation*}
+
 
     \end{enumerate}
 
