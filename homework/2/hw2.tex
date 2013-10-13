@@ -135,7 +135,7 @@ $\longrightarrow$ \\
       \begin{enumerate}
         \item If \verb|t| is a variable $x$, then FV(\verb|t|) is $\{x\}$, a contradiction.
         \item If \verb|t| is an abstraction, $\lambda x.$\verb|t|$_1$ then \verb|t| is a value.
-        \item if \verb|t| is an application, $($\verb|t|$_1$ \verb|t|$_2)$, then \verb|t| is not a value and we show that it can take a step:
+        \item if \verb|t| is an application, $($\verb|t|$_1$ \verb|t|$_2)$, then \verb|t| is not a value and we show that it can take a step. :
           \begin{enumerate}
             \item E-App1: By the inductive hypothesis \verb|t|$_1$ is either a value or
 can take a step, in the latter case E-App1 applies.
@@ -184,7 +184,7 @@ can take a step, in the latter case E-App1 applies.
 
     $and = \lambda a.\lambda b.a\ b\ false$\\
 
-    When $a$ is $true$ it will return the function that takes two arguments and applies the first to the second, which will be $thnk$ ``unwrapping it's contents''. If $a$ is $false$ it will return a function that ignores its first argument and return its second, in this case $false$: \\
+    When $a$ is $true$ it will return the function that takes two arguments and applies the first $thnk$ to the second ``unwrapping'' $thnk$'s contents. If $a$ is $false$ it will return a function that ignores its first argument and return its second, in this case $false$: \\
 
     $newAnd = \lambda a.\lambda thnk.(a\ (\lambda x.\lambda y.x\ y)\ (\lambda x.\lambda y.y))\ thnk\ false$\\
 
