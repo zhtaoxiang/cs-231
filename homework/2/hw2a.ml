@@ -24,8 +24,10 @@ let rec subst (x:string) (v:t) (t:t) =
       True -> True
     | Var name ->
       (if name = x then v else t)
-    | Function(var, body) ->
-      (if var = x then t else Function(var, (subst x v body)))
+    | Function(arg, body) ->
+      (* NOTE: if x is the named param of the function it's not free and we can stop,
+               otherwise we need to proceed and check for substitutions in subterms *)
+      (if arg = x then t else Function(arg, (subst x v body)))
     | FunCall(l, r) ->
       (FunCall((subst x v l), (subst x v r))))
 
