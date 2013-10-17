@@ -107,7 +107,7 @@
       \item If \verb|t| is an abstraction, $\lambda x.$\verb|t|$_1$ then \verb|t| is a value.
       \item if \verb|t| is an application, $($\verb|t|$_1$ \verb|t|$_2)$, then \verb|t| is not a value. We proceed by induction on the structure of \verb|t|$_1$.
         \begin{enumerate}
-        \item If \verb|t|$_1$ is a variable by the inductive hypothesis we have a contradiction.
+        \item If \verb|t|$_1$ is a variable then FV(\verb|t|) is not $\emptyset$, a contradiction.
         \item If \verb|t|$_1$ is a function then by the inductive hypothesis \verb|t|$_2$ is either a value and E-AppBeta applies or \verb|t|$_2$ can take a step and E-App2 applies.
         \item If \verb|t|$_1$ is an application E-App1 applies.
         \end{enumerate}
