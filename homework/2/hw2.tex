@@ -30,8 +30,7 @@
 \date{October 17th, 2013}
 
 \newtheorem{free}{Free Variables}
-\newtheorem{deter}{Determinism}
-\newtheorem{thm}{Theorem}
+\newtheorem{omg}{Omega}
 
 \begin{document}
 
@@ -104,39 +103,34 @@
     \begin{proof}
       We proceed by induction on the structure of \verb|t|:
       \begin{enumerate}
-      \item If \verb|t| is a variable $x$, then FV(\verb|t|) is $\{x\}$, a contradiction.
+      \item If \verb|t| is a variable, then FV(\verb|t|) is not $\emptyset$, a contradiction.
       \item If \verb|t| is an abstraction, $\lambda x.$\verb|t|$_1$ then \verb|t| is a value.
-      \item if \verb|t| is an application, $($\verb|t|$_1$ \verb|t|$_2)$, then \verb|t| is not a value and we show that it can take a step. :
+      \item if \verb|t| is an application, $($\verb|t|$_1$ \verb|t|$_2)$, then \verb|t| is not a value. We proceed by induction on the structure of \verb|t|$_1$.
         \begin{enumerate}
-        \item E-App1: By the inductive hypothesis \verb|t|$_1$ is either a value or
-          can take a step, in the latter case E-App1 applies.
-        \item E-App2: By the inductive hypothesis \verb|t|$_2$ is either a value or can take a step, the latter case E-App2 applies.
-        \item E-AppBeta: Otherwise, by the inductive hypothesis \verb|t|$_1$ and \verb|t|$_2$ are values and E-AppBeta applies.
+        \item If \verb|t|$_1$ is a variable by the inductive hypothesis we have a contradiction.
+        \item If \verb|t|$_1$ is a function then by the inductive hypothesis \verb|t|$_2$ is either a value and E-AppBeta applies or \verb|t|$_2$ can take a step and E-App2 applies.
+        \item If \verb|t|$_1$ is an application E-App1 applies.
         \end{enumerate}
       \end{enumerate}
     \end{proof}
 
   \item{Proof that $\omega$ Steps to Itself}
-    \begin{thm}If $(\lambda x.x\ x)\ (\lambda x.x\ x)$ $\longrightarrow*$ $t$,
-      then $t$ = $(\lambda x.x\ x)\ (\lambda x.x\ x)$.
-    \end{thm}
+    \begin{omg}If $(\lambda x.x\ x)\ (\lambda x.x\ x)$ $\longrightarrow*$ $t$, then $t$ = $(\lambda x.x\ x)\ (\lambda x.x\ x)$.
+    \end{omg}
 
     \textit{Induction Hypothesis.} If \verb|t|$_0$ $\longrightarrow$ \verb|t|$_0'$ , \verb|t|$_0$ $\longrightarrow$ \verb|t|$_0''$, and \verb|t|$_0$ $\longrightarrow$ \verb|t|$_0'$ is a sub-derivation of \verb|t| $\longrightarrow$ \verb|t|$'$, then \verb|t|$_0'$ = \verb|t|$_0''$.
 
     \begin{proof}
-      The last rule in derivation of $t\ \longrightarrow*\ t$ can be 3 cases:
+      The last rule in derivation of $(\lambda x.x\ x)\ (\lambda x.x\ x)$ $\longrightarrow*$ $t$ can be 3 cases:
       \begin{enumerate}
       \item E-Refl: Then it is trivally true.
 
       \item E-Step:
         The last rule in derivation of $t\ \longrightarrow\ t$ can be 3 cases:
         \begin{enumerate}
-        \item E-App1: Then we know $t$ is of form $(t1\ t2)$ and $t_1\ \longrightarrow\ t_1'$.
-        \item E-App2: Then we know $t$ is of form $(v1\ t2)$ and $t_2\ \longrightarrow\ t_2'$.
-        \item E-AppBeta: Then we know $t$ is of form $(t1\ v2)$.
-
-          \verb|t|$_1$ must take a step to some \verb|t|$_1''$. By the inductive hypothesis, since we know \verb|t|$_1$ steps to both \verb|t|$_1'$ and \verb|t|$_1''$,
-          then \verb|t|$_1'$ and \verb|t|$_1''$ must be the same.
+          \item E-App1: Then we know \verb|t| is of form (\verb|t|$_1$\ \verb|t|$_2$) and \verb|t|$_1$ $\longrightarrow$ \verb|t|$_1'$, a contradiction.
+          \item E-App2: Then we know \verb|t| is of form (\verb|v|$_1$\ \verb|t|$_2$) and \verb|t|$_2$ $\longrightarrow$ \verb|t|$_2'$, also a contradiction.
+          \item E-AppBeta: Then we know \verb|t| is of form ($\lambda x.$\verb|t|$_0$) \verb|v|, where \verb|t|$_0$ is $x\ x$ and \verb|v| is $(\lambda x.x\ x)$. We substitute \verb|v| for $x$ in \verb|t|$_0$ and get $(\lambda x.x\ x)\ (\lambda x.x\ x)$, the desired result.
         \end{enumerate}
 
 
@@ -149,19 +143,11 @@
 
     \newpage
 
-  \item Short circuit \verb|and| and \verb|or|.
-
-    The old definition of \verb|and|:\\
-
-    $and = \lambda a.\lambda b.a\ b\ false$\\
-
-    When $a$ is $true$ it will return the function that takes two arguments and applies the first $thnk$ to the second ``unwrapping'' $thnk$'s contents. If $a$ is $false$ it will return a function that ignores its first argument and return its second, in this case $false$: \\
+  \item Short circuit \verb|and| and \verb|or|.\\
 
     $newAnd = \lambda a.\lambda thnk.(a\ (\lambda x.\lambda y.x\ y)\ (\lambda x.\lambda y.y))\ thnk\ false$\\
 
-    The old definition of \verb|or|:\\
-
-    $or = \lambda a.\lambda b.a\ true\ b$\\
+    When $a$ is $true$ it will return $(\lambda x.\lambda y.x\ y)$ that will take the $thnk$ and apply it to $false$ ``unwrapping'' $thnk$'s contents. If $a$ is $false$ it will return $(\lambda x.\lambda y.y)$ that will ignore $thnk$ and return $false$: \\
 
     Similar to the above: \\
 
