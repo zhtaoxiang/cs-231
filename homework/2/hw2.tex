@@ -115,10 +115,10 @@
     \end{proof}
 
   \item{Proof that $\omega$ Steps to Itself}
-    \begin{omg}If $(\lambda x.x\ x)\ (\lambda x.x\ x)$ $\longrightarrow*$ $t$, then $t$ = $(\lambda x.x\ x)\ (\lambda x.x\ x)$.
+    \begin{omg} If $(\lambda x.x\ x)\ (\lambda x.x\ x)$ $\longrightarrow*$ \verb|t|, then \verb|t| = $(\lambda x.x\ x)\ (\lambda x.x\ x)$.
     \end{omg}
 
-    \textit{Induction Hypothesis.} If \verb|t|$_0$ $\longrightarrow$ \verb|t|$_0'$ , \verb|t|$_0$ $\longrightarrow$ \verb|t|$_0''$, and \verb|t|$_0$ $\longrightarrow$ \verb|t|$_0'$ is a sub-derivation of \verb|t| $\longrightarrow$ \verb|t|$'$, then \verb|t|$_0'$ = \verb|t|$_0''$.
+    \textit{Induction Hypothesis.} If $(\lambda x.x\ x)\ (\lambda x.x\ x)$ $\longrightarrow*$ \verb|t|$_0$ and $(\lambda x.x\ x)\ (\lambda x.x\ x)$ $\longrightarrow*$ \verb|t|$_0$ is a sub-derivation of $(\lambda x.x\ x)\ (\lambda x.x\ x)$ $\longrightarrow*$ \verb|t| then \verb|t|$_0$ = $(\lambda x.x\ x)\ (\lambda x.x\ x)$.
 
     \begin{proof}
       The last rule in derivation of $(\lambda x.x\ x)\ (\lambda x.x\ x)$ $\longrightarrow*$ $t$ can be 3 cases:
@@ -126,22 +126,17 @@
       \item E-Refl: Then it is trivally true.
 
       \item E-Step:
-        The last rule in derivation of $t\ \longrightarrow\ t$ can be 3 cases:
+        The last rule in derivation of \verb|t| $\longrightarrow$ \verb|t|$'$ can be 3 cases:
         \begin{enumerate}
           \item E-App1: Then we know \verb|t| is of form (\verb|t|$_1$\ \verb|t|$_2$) and \verb|t|$_1$ $\longrightarrow$ \verb|t|$_1'$, a contradiction.
           \item E-App2: Then we know \verb|t| is of form (\verb|v|$_1$\ \verb|t|$_2$) and \verb|t|$_2$ $\longrightarrow$ \verb|t|$_2'$, also a contradiction.
           \item E-AppBeta: Then we know \verb|t| is of form ($\lambda x.$\verb|t|$_0$) \verb|v|, where \verb|t|$_0$ is $x\ x$ and \verb|v| is $(\lambda x.x\ x)$. We substitute \verb|v| for $x$ in \verb|t|$_0$ and get $(\lambda x.x\ x)\ (\lambda x.x\ x)$, the desired result.
         \end{enumerate}
 
-
-      \item E-Trans: \verb|t|$_1$ must take a step to some \verb|t|$_1'$, and \verb|t| has the form
-        \verb|if t|$_1$ \verb|then t|$_2$ \verb|else t|$_3$.
-
+      \item E-Trans: Then \verb|t| $\longrightarrow *$ \verb|t|$''$ and \verb|t|$''$ $\longrightarrow *$ \verb|t|$'$. By the inductive hypothesis \verb|t|$''$ is $(\lambda x.x\ x)\ (\lambda x.x\ x)$, but then it also applies to \verb|t|$''$ $\longrightarrow *$ \verb|t|$'$ which means \verb|t|$'$ is $(\lambda x.x\ x)\ (\lambda x.x\ x)$, the desired result.
 
       \end{enumerate}
     \end{proof}
-
-    \newpage
 
   \item Short circuit \verb|and| and \verb|or|.\\
 
