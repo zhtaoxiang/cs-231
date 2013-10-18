@@ -48,7 +48,8 @@ let rec step t =
     | Function fn -> raise NormalForm
     | FunCall(Function(fn), arg) ->
       (try
-         (* if the `step arg` throws a NormalForm subst otherwise it stepped *)
+         (* if the `step arg` throws a NormalForm apply fn to arg
+            since it's obviously in normal form *)
          (FunCall(Function(fn), step arg))
        with NormalForm ->
          fn(arg))
