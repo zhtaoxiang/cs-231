@@ -39,8 +39,8 @@
 \begin{enumerate}
   \item Call-by-value Lambda Calculus
     \begin{enumerate}
-    \item $x\ (\lambda x.x)$
-    \item $((\lambda x.x)\ \lambda y.y)\ r)\ (\lambda q.q)$ $\longrightarrow$ $((\lambda y.y)\ r)\ (\lambda q.q)$ $\longrightarrow$ $r\ (\lambda q.q)$ \\
+    \item $(\lambda x.x)\ x$
+    \item $((\lambda x.x)\ (\lambda y.y\ z))\ (\lambda n.n)\ \longrightarrow (\lambda y.y\ z)\ (\lambda n.n) \longrightarrow (\lambda n.n)\ z$
     \item $(\lambda x.x\ (\lambda y.y\ (\lambda z.z\ \lambda n.n)))\ (\lambda w. w \ \lambda r.r)$ \\
       \begin{equation*}
         \trfrac[E-App1]{
@@ -72,14 +72,12 @@
       $(\lambda z.z)\ (\lambda z.z)$ $\longrightarrow$ \\
       $(\lambda z.z)$
 
-    \item $(\lambda x.\ (x\ (\lambda z.x\ z)))\ (\lambda x.x\ y\ x)$ $\longrightarrow$ \\
+    \item
+      $(\lambda x.\ (x\ (\lambda z.x\ z)))\ (\lambda x.x\ y\ x)$
+      $\longrightarrow$ \\
       $(\lambda x.x\ y\ x)\ (\lambda z.(\lambda x.x\ y\ x)\ z)\ $
       $\longrightarrow$  \\
       $(\lambda z.(\lambda x.x\ y\ x)\ z)\ y\ (\lambda z.(\lambda x.x\ y\ x)\ z)$
-      $\longrightarrow$  \\
-      $((\lambda x.x\ y\ x)\ y)\ (\lambda z.(\lambda x.x\ y\ x)\ z)$
-      $\longrightarrow$  \\
-      $(y\ y\ y)\ (\lambda z.(\lambda x.x\ y\ x)\ z)$
 
     \item $(\lambda x.x\ x)\ (\lambda x.x\ x\ x)$ $\longrightarrow$ \\
       $(\lambda x.x\ x\ x)\ (\lambda x.x\ x\ x)$ $\longrightarrow$ \\
