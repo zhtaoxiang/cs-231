@@ -46,9 +46,13 @@ let rec step t =
   (match t with
       True -> raise NormalForm
     | Function fn -> raise NormalForm
-    | FunCall(Function(fn), arg) -> fn(arg)
+    | FunCall(Function(fn), arg) ->
+      (try
+         (* if the `step arg` throws a NormalForm subst otherwise it stepped *)
+         (FunCall(Function(fn), step arg))
+       with NormalForm ->
+         fn(arg))
     | FunCall(func, arg) -> FunCall(step func, arg))
-
 
 (* FunCall(Function(function x -> x), True) => True *)
 (* FunCall(FunCall(Function(function x -> x), True), True) => FunCall (True, True)*)
