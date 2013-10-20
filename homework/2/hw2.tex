@@ -1,0 +1,152 @@
+\documentclass{article}
+\topmargin = 0in
+\oddsidemargin = 0in
+\evensidemargin = \oddsidemargin
+\textwidth = 6.5in
+\textheight = 8in
+\usepackage{times}
+\usepackage{bcprules}
+\usepackage{amsthm}
+\usepackage{syntax}
+\usepackage{trfrac}
+\usepackage{mathtools}
+
+\renewcommand{\syntleft}{\normalfont\itshape}
+\renewcommand{\syntright}{}
+
+\newcommand{\step}[2]{{\tt #1} $\longrightarrow$ {\tt #2}}
+\newcommand{\eval}[2]{{\tt #1} $\Downarrow$ {\tt #2}}
+\newcommand{\tc}[3]{{\tt #1} $\vdash$ {\tt #2} \ : \ {\tt #3}}
+\newcommand{\tcDef}[2]{{\tt #1}\ : \ {\tt #2}}
+
+\newcommand{\inferrule}[3]{\infrule[#1]{\mbox{#2}}{\mbox{#3}}}
+\newcommand{\inferax}[2]{\infrule[#1]{\mbox{}}{\mbox{#2}}}
+
+
+\title{Homework 2}
+
+\author{John Bender and Lorenzo Gomez, CS 231}
+
+\date{October 17th, 2013}
+
+\newtheorem{free}{Free Variables}
+\newtheorem{omg}{Omega}
+
+\begin{document}
+
+\maketitle
+
+\begin{enumerate}
+  \item Call-by-value Lambda Calculus
+    \begin{enumerate}
+    \item $(\lambda x.x)\ x$
+    \item $((\lambda x.x)\ (\lambda y.y\ z))\ (\lambda n.n)\ \longrightarrow (\lambda y.y\ z)\ (\lambda n.n) \longrightarrow (\lambda n.n)\ z$
+    \item $(\lambda x.x\ (\lambda y.y\ (\lambda z.z\ \lambda n.n)))\ (\lambda w. w)$ \\
+      \begin{equation*}
+        \trfrac[E-App1]{
+          \trfrac[E-App2]{
+            \trfrac[E-App2]{
+              \trfrac[E-AppBeta]{}{
+                \lambda z.z\ \lambda n.n \longrightarrow \lambda n.n
+              }
+            }{
+              \lambda y.y\ (\lambda z.z\ \lambda n.n) \longrightarrow \lambda y.y\ \lambda n.n
+            }
+          }{
+            \lambda x.x\ (\lambda y.y\ (\lambda z.z\ \lambda n.n)) \longrightarrow \lambda x.x\ (\lambda y.y\ \lambda n.n)
+          }
+        }{
+          (\lambda x.x\ (\lambda y.y\ (\lambda z.z\ \lambda n.n)))\ \lambda w.w \longrightarrow
+          (\lambda x.x\ (\lambda y.y\ \lambda n.n))\ \lambda w.w
+        }
+      \end{equation*}
+    \end{enumerate}
+
+    \vspace{0.5cm}
+
+  \item{Stepping with call-by-value}
+    \begin{enumerate}
+    \item $(\lambda x.x\ x)\ ((\lambda y.y\ y)\ (\lambda z.z))$ $\longrightarrow$ \\
+      $(\lambda x.x\ x)\ ((\lambda z.z)\ (\lambda z.z))$ $\longrightarrow$ \\
+      $(\lambda x.x\ x)\ (\lambda z.z)$ $\longrightarrow$ \\
+      $(\lambda z.z)\ (\lambda z.z)$ $\longrightarrow$ \\
+      $(\lambda z.z)$
+
+    \item
+      $(\lambda x.\ (x\ (\lambda z.x\ z)))\ (\lambda x.x\ y\ x)$
+      $\longrightarrow$ \\
+      $(\lambda x.x\ y\ x)\ (\lambda z.(\lambda x.x\ y\ x)\ z)\ $
+      $\longrightarrow$  \\
+      $(\lambda z.(\lambda x.x\ y\ x)\ z)\ y\ (\lambda z.(\lambda x.x\ y\ x)\ z)$
+
+    \item $(\lambda x.x\ x)\ (\lambda x.x\ x\ x)$ $\longrightarrow$ \\
+      $(\lambda x.x\ x\ x)\ (\lambda x.x\ x\ x)$ $\longrightarrow$ \\
+      $(\lambda x.x\ x\ x)\ (\lambda x.x\ x\ x)\ (\lambda x.x\ x\ x)$
+      $\longrightarrow$ \\
+      $(\lambda x.x\ x\ x)\ (\lambda x.x\ x\ x)\ (\lambda x.x\ x\ x)\ (\lambda x.x\ x\ x)$ $\longrightarrow$ \bot
+
+
+    \end{enumerate}
+
+  \item{See attached $hw2a.ml$ file.}
+
+  \item{Free Variables Proof}
+    \begin{free}
+      If FV(\verb|t|) = $\emptyset$ then either \verb|t| is a value or there exists at term \verb|t|$'$ such that \verb|t| $\longrightarrow$ \verb|t|$'$.
+    \end{free}
+
+    \textit{Induction Hypothesis.} If FV(\verb|t|$_0$) = $\emptyset$ and \verb|t|$_0$ is a sub-term of \verb|t|, then either \verb|t|$_0$ is a value or there exists at term \verb|t|$'_0$ such that \verb|t|$_0$ $\longrightarrow$ \verb|t|$'_0$.
+
+
+    \begin{proof}
+      We proceed by induction on the structure of \verb|t|:
+      \begin{enumerate}
+      \item If \verb|t| is a variable, then FV(\verb|t|) is not $\emptyset$, a contradiction.
+      \item If \verb|t| is an abstraction, $\lambda x.$\verb|t|$_1$ then \verb|t| is a value.
+      \item if \verb|t| is an application, $($\verb|t|$_1$ \verb|t|$_2)$, then \verb|t| is not a value. We proceed by induction on the structure of \verb|t|$_1$.
+        \begin{enumerate}
+        \item If \verb|t|$_1$ is a variable then FV(\verb|t|) is not $\emptyset$, a contradiction.
+        \item If \verb|t|$_1$ is a function then by the inductive hypothesis \verb|t|$_2$ is either a value and E-AppBeta applies or \verb|t|$_2$ can take a step and E-App2 applies.
+        \item If \verb|t|$_1$ is an application E-App1 applies.
+        \end{enumerate}
+      \end{enumerate}
+    \end{proof}
+
+  \item{Proof that $\omega$ Steps to Itself}
+    \begin{omg} If $(\lambda x.x\ x)\ (\lambda x.x\ x)$ $\longrightarrow*$ \verb|t|, then \verb|t| = $(\lambda x.x\ x)\ (\lambda x.x\ x)$.
+    \end{omg}
+
+    \textit{Induction Hypothesis.} If $(\lambda x.x\ x)\ (\lambda x.x\ x)$ $\longrightarrow*$ \verb|t|$_0$ and $(\lambda x.x\ x)\ (\lambda x.x\ x)$ $\longrightarrow*$ \verb|t|$_0$ is a sub-derivation of $(\lambda x.x\ x)\ (\lambda x.x\ x)$ $\longrightarrow*$ \verb|t| then \verb|t|$_0$ = $(\lambda x.x\ x)\ (\lambda x.x\ x)$.
+
+    \begin{proof}
+      The last rule in derivation of $(\lambda x.x\ x)\ (\lambda x.x\ x)$ $\longrightarrow*$ $t$ can be 3 cases:
+      \begin{enumerate}
+      \item E-Refl: Then it is trivally true.
+
+      \item E-Step:
+        The last rule in derivation of \verb|t| $\longrightarrow$ \verb|t|$'$ can be 3 cases:
+        \begin{enumerate}
+          \item E-App1: Then we know \verb|t| is of form (\verb|t|$_1$\ \verb|t|$_2$) and \verb|t|$_1$ $\longrightarrow$ \verb|t|$_1'$, a contradiction.
+          \item E-App2: Then we know \verb|t| is of form (\verb|v|$_1$\ \verb|t|$_2$) and \verb|t|$_2$ $\longrightarrow$ \verb|t|$_2'$, also a contradiction.
+          \item E-AppBeta: Then we know \verb|t| is of form ($\lambda x.$\verb|t|$_0$) \verb|v|, where \verb|t|$_0$ is $x\ x$ and \verb|v| is $(\lambda x.x\ x)$. We substitute \verb|v| for $x$ in \verb|t|$_0$ and get $(\lambda x.x\ x)\ (\lambda x.x\ x)$, the desired result.
+        \end{enumerate}
+
+      \item E-Trans: Then \verb|t| $\longrightarrow *$ \verb|t|$''$ and \verb|t|$''$ $\longrightarrow *$ \verb|t|$'$. By the inductive hypothesis \verb|t|$''$ is $(\lambda x.x\ x)\ (\lambda x.x\ x)$, but then it also applies to \verb|t|$''$ $\longrightarrow *$ \verb|t|$'$ which means \verb|t|$'$ is $(\lambda x.x\ x)\ (\lambda x.x\ x)$, the desired result.
+
+      \end{enumerate}
+    \end{proof}
+
+  \item Short circuit \verb|and| and \verb|or|.\\
+
+    $newAnd = \lambda a.\lambda thnk.(a\ (\lambda x.\lambda y.x\ y)\ (\lambda x.\lambda y.y))\ thnk\ false$\\
+
+    When $a$ is $true$ it will return $(\lambda x.\lambda y.x\ y)$ that will take the $thnk$ and apply it to $false$ ``unwrapping'' $thnk$'s contents. If $a$ is $false$ it will return $(\lambda x.\lambda y.y)$ that will ignore $thnk$ and return $false$: \\
+
+    Similar to the above: \\
+
+    $newOr = \lambda a.\lambda thnk.(a\ (\lambda x.\lambda y.y)\ (\lambda x.\lambda y.x\ y))\ thnk\ true$\\
+
+  \item{See attached $hw2b.ml$ file.}
+\end{enumerate}
+
+\end{document}
