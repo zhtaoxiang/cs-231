@@ -1,0 +1,92 @@
+\documentclass{article}
+\topmargin = 0in
+\oddsidemargin = 0in
+\evensidemargin = \oddsidemargin
+\textwidth = 6.5in
+\textheight = 8in
+\usepackage{times}
+\usepackage{bcprules}
+\usepackage{amsthm}
+\usepackage{syntax}
+\usepackage{trfrac}
+\usepackage{mathtools}
+
+\renewcommand{\syntleft}{\normalfont\itshape}
+\renewcommand{\syntright}{}
+
+\newcommand{\step}[2]{{\tt #1} $\longrightarrow$ {\tt #2}}
+\newcommand{\eval}[2]{{\tt #1} $\Downarrow$ {\tt #2}}
+\newcommand{\tc}[3]{{\tt #1} $\vdash$ {\tt #2} \ : \ {\tt #3}}
+\newcommand{\tcDef}[2]{{\tt #1}\ : \ {\tt #2}}
+
+\newcommand{\inferrule}[3]{\infrule[#1]{\mbox{#2}}{\mbox{#3}}}
+\newcommand{\inferax}[2]{\infrule[#1]{\mbox{}}{\mbox{#2}}}
+
+\newcommand{\term}[1]{{\tt t$_{#1}$}}
+
+
+\title{Homework 3}
+
+\author{John Bender and Lorenzo Gomez, CS 231}
+
+\date{October 24th, 2013}
+
+\newtheorem{theorem}{Theorem}
+
+
+\begin{document}
+
+\maketitle
+
+\begin{enumerate}
+  \item Progress for Booleans and Integers
+
+    \begin{theorem}
+      If \verb|t:T|, then either \verb|t| is a value or there exists some term \verb|t|$'$ such that \verb|t| $\longrightarrow$ \verb|t|$'$.
+    \end{theorem}
+
+    \begin{proof}
+      We proceed by induction on the derivation of \verb|t:T| with case analysis on the last rule in the derivation.
+      \begin{enumerate}
+        \item T-True: \term{} is \verb|true|, a value.
+        \item T-False: \term{} is \verb|false|, a value.
+        \item T-Num: \term{} is \verb|n|, an integer value.
+        \item T-If: \term{} is \verb|if t|$_1$ \verb|then t|$_2$ \verb|else t|$_3$, and \term{1} has type \verb|Bool|. By the inductive hypothesis \term{1} is either a value or there exists \term{1}$'$ such that \step{t$_1$}{\term{1}$'$}. We proceed by case analysis on the form of \term{1}.
+          \begin{enumerate}
+            \item Value: If \term{1} is a value then, by its type \verb|Bool|, we know it must be \verb|true| or \verb|false| and it can step by E-IfTrue or E-IfFalse.
+            \item Steps to \term{1}$'$: Then E-If applies and \term{} can step to \verb|if t|$_1'$ \verb|then t|$_2$ \verb|else t|$_3$.
+          \end{enumerate}
+        \item T-Add: \term{} is \term{1} \verb|+| \term{2}. \term{1} and \term{2} have the type \verb|Int|. By the inductive hypothesis either \term{1} is a value or there exists some \term{1}$'$ such that \step{t$_1$}{\term{1}$'$}. We proceed by case analysis on the form of \term{1}.
+          \begin{enumerate}
+            \item Value: If \term{1} is a value then, by its type \verb|Int|, we know that it must be an integer \verb|n| and either E-Plus2 or E-PlusRed may apply to \term{}. By the inductive hypothesis \term{2} is either a value, in which case E-PlusRed applies and \term{} steps to \verb|n|$_1$ $[[+]]$ \verb|n|$_2$, or \term{2} can take a step to \term{2}$'$ and E-Plus2 and \term{} steps to \verb|v|$_1$ \verb|+| \term{2}$'$.
+            \item Steps to \term{1}$'$: If \term{1} can step then E-Plus1 applies and \term{} steps to \term{1}$'$ \verb|+| \term{2}.
+          \end{enumerate}
+        \item T-GT: By a similar argument replacing occurrences of \verb|+| with \verb|>|.
+
+        \item T-GT: \term{} is \term{1} \verb|>| \term{2}. \term{1} and \term{2} have the type \verb|Int|. By the inductive hypothesis either \term{1} is a value or there exists some \term{1}$'$ such that \step{t$_1$}{\term{1}$'$}. We proceed by case analysis on the form of \term{1}.
+          \begin{enumerate}
+            \item Value: If \term{1} is a value then, by its type \verb|Int|, we know that it must be an integer \verb|n| and either E-Plus2 or E-PlusRed may apply to \term{}. By the inductive hypothesis \term{2} is either a value, in which case E-PlusRed applies and \term{} steps to \verb|n|$_1$ $[[>]]$ \verb|n|$_2$, or \term{2} can take a step to \term{2}$'$, E-Plus2 applies, and \term{} steps to \verb|v|$_1$ \verb|+| \term{2}$'$.
+            \item Steps to \term{1}$'$: If \term{1} can step then E-Plus1 applies and \term{} steps to \term{1}$'$ \verb|>| \term{2}.
+          \end{enumerate}
+        \end{enumerate}
+    \end{proof}
+
+\newpage
+  \item Preservation for Booleans and Integers
+
+    \begin{theorem}
+      If \verb|t:T| and \verb|t| $\longrightarrow$ \verb|t|$'$, then \term{1}$'$\verb|:T|.
+    \end{theorem}
+
+    \begin{proof}
+      We proceed by induction on the derivation of \verb|t:T| with case analysis on the last rule in the derivation.
+      \begin{enumerate}
+        \item T-True: A contradiction with \verb|t| $\longrightarrow$ \verb|t|$'$
+        \item T-False: A contradiction with \verb|t| $\longrightarrow$ \verb|t|$'$
+        \item T-If: Then \term{} has the form \verb|if t|$_1$ \verb|then t|$_2$ \verb|else t|$_3$, \term{1} has type \verb|Bool|, and both \term{2} and \term{3} have the type \verb|T|. We proceed by case analysis on the rule in the derivation \verb|t| $\longrightarrow$ \verb|t|$'$.
+      \end{enumerate}
+    \end{proof}
+
+\end{enumerate}
+
+\end{document}
