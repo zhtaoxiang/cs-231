@@ -23,6 +23,7 @@
 \newcommand{\inferax}[2]{\infrule[#1]{\mbox{}}{\mbox{#2}}}
 
 \newcommand{\term}[1]{{\tt t$_{#1}$}}
+\newcommand{\mathType}[2]{\mathtt{#1}:\mathtt{#2}}
 
 
 \title{Homework 3}
@@ -58,20 +59,13 @@
           \end{enumerate}
         \item T-Add: \term{} is \term{1} \verb|+| \term{2}. \term{1} and \term{2} have the type \verb|Int|. By the inductive hypothesis either \term{1} is a value or there exists some \term{1}$'$ such that \step{t$_1$}{\term{1}$'$}. We proceed by case analysis on the form of \term{1}.
           \begin{enumerate}
-            \item Value: If \term{1} is a value then, by its type \verb|Int|, we know that it must be an integer \verb|n| and either E-Plus2 or E-PlusRed may apply to \term{}. By the inductive hypothesis \term{2} is either a value, in which case E-PlusRed applies and \term{} steps to \verb|n|$_1$ $[[+]]$ \verb|n|$_2$, or \term{2} can take a step to \term{2}$'$ and E-Plus2 and \term{} steps to \verb|v|$_1$ \verb|+| \term{2}$'$.
+            \item Value: Either E-Plus2 or E-PlusRed may apply to \term{}. By the inductive hypothesis \term{2} is either a value, in which case E-PlusRed applies and \term{} steps to \verb|n|$_1$ $[[+]]$ \verb|n|$_2$, or \term{2} can take a step to \term{2}$'$ and E-Plus2 applies. Then \term{} steps to \verb|v|$_1$ \verb|+| \term{2}$'$.
             \item Steps to \term{1}$'$: If \term{1} can step then E-Plus1 applies and \term{} steps to \term{1}$'$ \verb|+| \term{2}.
           \end{enumerate}
-        \item T-GT: By a similar argument replacing occurrences of \verb|+| with \verb|>|.
-
-        \item T-GT: \term{} is \term{1} \verb|>| \term{2}. \term{1} and \term{2} have the type \verb|Int|. By the inductive hypothesis either \term{1} is a value or there exists some \term{1}$'$ such that \step{t$_1$}{\term{1}$'$}. We proceed by case analysis on the form of \term{1}.
-          \begin{enumerate}
-            \item Value: If \term{1} is a value then, by its type \verb|Int|, we know that it must be an integer \verb|n| and either E-Plus2 or E-PlusRed may apply to \term{}. By the inductive hypothesis \term{2} is either a value, in which case E-PlusRed applies and \term{} steps to \verb|n|$_1$ $[[>]]$ \verb|n|$_2$, or \term{2} can take a step to \term{2}$'$, E-Plus2 applies, and \term{} steps to \verb|v|$_1$ \verb|+| \term{2}$'$.
-            \item Steps to \term{1}$'$: If \term{1} can step then E-Plus1 applies and \term{} steps to \term{1}$'$ \verb|>| \term{2}.
-          \end{enumerate}
-        \end{enumerate}
+        \item T-GT: By a similar argument replacing occurrences of ``Plus'' with ``GT'' and $+$ with $>$.
+      \end{enumerate}
     \end{proof}
 
-\newpage
   \item Preservation for Booleans and Integers
 
     \begin{theorem}
@@ -81,12 +75,150 @@
     \begin{proof}
       We proceed by induction on the derivation of \verb|t:T| with case analysis on the last rule in the derivation.
       \begin{enumerate}
-        \item T-True: A contradiction with \verb|t| $\longrightarrow$ \verb|t|$'$
-        \item T-False: A contradiction with \verb|t| $\longrightarrow$ \verb|t|$'$
-        \item T-If: Then \term{} has the form \verb|if t|$_1$ \verb|then t|$_2$ \verb|else t|$_3$, \term{1} has type \verb|Bool|, and both \term{2} and \term{3} have the type \verb|T|. We proceed by case analysis on the rule in the derivation \verb|t| $\longrightarrow$ \verb|t|$'$.
+        \item T-True: \term{} is the value \verb|true|, so we have a contradiction with \verb|t| $\longrightarrow$ \verb|t|$'$
+        \item T-False: \term{} is the value \verb|false|, so we have a contradiction with \verb|t| $\longrightarrow$ \verb|t|$'$
+        \item T-Num: \term{} is an integer value,  so we have a contradiction with \verb|t| $\longrightarrow$ \verb|t|$'$
+        \item T-If: Then \term{} has the form \verb|if t|$_1$ \verb|then t|$_2$ \verb|else t|$_3$, \term{1} has type \verb|Bool|, and both \term{2} and \term{3} have the type \verb|T|. We proceed by case analysis on the last rule in the derivation \verb|t| $\longrightarrow$ \verb|t|$'$.
+          \begin{enumerate}
+            \item E-IfTrue: Then \term{1} is \verb|true| and \term{}$'$ is \term{2}. \term{2} has type \verb|t| from T-If.
+            \item E-IfFalse: Then \term{1} is \verb|false| and \term{}$'$ is \term{3}. \term{3} has type \verb|t| from T-If.
+            \item E-If:  Then \term{1} $\longrightarrow$ \term{1}$'$ and \term{}$'$ is \verb|if t|$_1'$ \verb|then t|$_2$ \verb|else t|$_3$. By the inductive hypothesis, \term{1}$'$:Bool and by the application of T-If, \term{}$'$ has type \verb|T|.
+          \end{enumerate}
+        \item T-Plus: Then \term{} has the form \term{1} \verb|+| \term{2} and both \term{1} and \term{2} have type \verb|Int|. We proceed by case analysis on the last rule in the derivation \verb|t| $\longrightarrow$ \verb|t|$'$.
+          \begin{enumerate}
+            \item E-Plus1: Then \term{1} $\longrightarrow$ \term{1}$'$ and \term{2} is preserved with the type \verb|Int| from T-Plus. By the inductive hypothesis and the fact that \term{1} has the type \verb|Int| from T-Plus, \term{1}$'$ has type \verb|Int|. As a result \term{}$'$ is \term{1}$'$ \verb|+| \term{2} with type \verb|Int|.
+            \item E-Plus2: Then \verb|v|$_1$ is preserved with type \verb|Int| from T-Plus and \term{2} $\longrightarrow$ \term{2}$'$. By the inductive hypothesis and the fact that \term{2} has type \verb|Int| from T-Plus we know that \term{2}$'$ has type \verb|Int|. As a result \term{}$'$ is \verb|v|$_1$ \verb|+| \term{2}$'$ with type \verb|Int|
+            \item E-PlusRed: Then \verb|n|$_1$ and \verb|n|$_2$ have type \verb|Int| and the result of $[[+]]$ on two integers is again an integer \verb|n|.
+          \end{enumerate}
+        \item T-GT: By a similar argument replacing occurrences of ``Plus'' with ``GT'' and $+$ with $>$.
       \end{enumerate}
     \end{proof}
 
-\end{enumerate}
 
+  \item New Rules, Progress, and Preservation.
+    \begin{enumerate}
+      \item Remove E-IfFalse
+        \begin{enumerate}
+          \item \verb|if false then 0 else 0|, breaks progress because it types with T-If but cannot step without E-IfFalse so there is no \term{}$'$ and it's not a value.
+          \item It does not prevent preservation since the assumption is that the term can step.
+        \end{enumerate}
+      \item Add \verb|0| as type \verb|Bool|
+        \begin{enumerate}
+          \item \verb|if 0 then 0 else 0|, breaks progress because it breaks the canonical forms lemma which is required to show that this term can take a step with E-IfTrue or E-IfFalse.
+          \item Doesn't invalidate preservation because the term can't step so it's a contradiction.
+        \end{enumerate}
+
+      \item Add E-If2. Neither. Ambiguity provides for more ways to step and the rule preserves the type of an \verb|if|.
+
+      \item Addition of booleans.
+        \begin{enumerate}
+          \item Doesn't invalidate progress because the new evaluation rules provide for progress and they can be typed by the new type rule.
+          \item Breaks preservation. \verb|false + false| which steps to \verb|false| under the new rule but doesn't type as \verb|Int|.
+        \end{enumerate}
+
+      \item \verb|Int| guard.
+        \begin{enumerate}
+          \item \verb|if 1 then 0 else 0| type checks but can't step and isn't a value.
+          \item Doesn't affect preservation because the assumption that the term can step is contradicted.
+        \end{enumerate}
+     \end{enumerate}
+
+     \newpage
+
+     \item Derive terms:
+       \begin{enumerate}
+         \item \verb|f (if x then 0 else 1)| \\
+
+           \begin{equation*}
+             \Gamma = \{ \mathType{x}{Bool}, \mathType{f}{Int \rightarrow T} \}
+           \end{equation*}
+           \begin{equation*}
+             \trfrac[T-App]{
+               \trfrac[T-Var]{
+                 \mathtt{f : Int} \rightarrow \mathtt{T} \in \Gamma
+               }{
+                 \Gamma \vdash \mathtt{f : Int} \rightarrow \mathtt{T}
+               }
+               \qquad
+               \trfrac[T-If]{
+                 \Gamma \vdash
+                 \qquad
+                 \trfrac[T-Var]{
+                   \mathType{x}{Bool} \in \Gamma
+                 }{
+                   \mathType{x}{Bool}
+                 }
+                 \qquad
+                 \trfrac[T-Num]{}{
+                   \mathType{0}{Int}
+                 }
+                 \qquad
+                 \trfrac[T-Num]{}{
+                   \mathType{1}{Int}
+                 }
+               }{
+                 \Gamma \vdash \mathtt{(if\ x\ then\ 0\ else\ 1) : Int}
+               }
+             }{
+               \Gamma \vdash \mathtt{f\ (if\ x\ then\ 0\ else\ 1) : T}
+             }
+           \end{equation*}
+
+         \item \verb|f (if (f x) then 0 else 1)| \\
+
+           \begin{equation*}
+             \Gamma = \{ \mathType{x}{Int}, \mathType{f}{Int \rightarrow Bool} \}
+           \end{equation*}
+           \begin{equation*}
+             \trfrac[T-App]{
+               \trfrac[T-Var]{
+                 \mathtt{f : Int} \rightarrow \mathtt{Bool} \in \Gamma
+               }{
+                 \Gamma \vdash \mathtt{f : Int} \rightarrow \mathtt{Bool}
+               }
+               \ \
+               \trfrac[T-If]{
+                 \Gamma \vdash
+                 \ \
+                 \trfrac[T-App]{
+                   \trfrac[T-Var]{
+                     \mathtt{f : Int} \rightarrow \mathtt{Bool} \in \Gamma
+                   }{
+                     \Gamma \vdash \mathtt{f : Int} \rightarrow \mathtt{Bool}
+                   }
+                   \ \
+                   \trfrac[T-Var]{
+                     \mathType{x}{Int} \in \Gamma
+                   }{
+                     \Gamma \vdash \mathType{x}{Int}
+                   }
+                 }{
+                   \mathType{f\ x}{Bool}
+                 }
+                 \ \
+                 \trfrac[T-Num]{}{
+                   \mathType{0}{Int}
+                 }
+                 \ \
+                 \trfrac[T-Num]{}{
+                   \mathType{1}{Int}
+                 }
+               }{
+                 \Gamma \vdash \mathtt{(if\ (f\ x)\ then\ 0\ else\ 1) : Int}
+               }
+             }{
+               \Gamma \vdash \mathtt{f\ (if\ (f\ x)\ then\ 0\ else\ 1) : Bool}
+             }
+           \end{equation*}
+
+         \item \verb|f (if (f x) then (f 0) else 1)| \\
+
+           Won't check because the type of \verb|f| would have to be \verb|Int| $\longrightarrow$ \verb|Bool| for the \term{1} of the \verb|if| and \verb|Int| $\longrightarrow$ \verb|Int| for the \term{2} simultaneously.
+       \end{enumerate}
+     \item Reverse soundness
+       \begin{enumerate}
+         \item Reverse Progress. TODO
+         \item Reverse Preservation. TODO
+       \end{enumerate}
+     \end{enumerate}
 \end{document}
