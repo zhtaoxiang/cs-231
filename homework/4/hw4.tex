@@ -24,9 +24,10 @@
 
 \newcommand{\term}[1]{{\tt t$_{#1}$}}
 \newcommand{\mathType}[2]{\mathtt{#1}:\mathtt{#2}}
+\newcommand{\iftt}[3]{\mathtt{if}\ #1\ \mathtt{then}\ #2\ \mathtt{else}\ #3}
 
 
-\title{Homework 3}
+\title{Homework 4}
 
 \author{Eric Marcin-Cuddy and John Bender, CS 231}
 
@@ -49,7 +50,22 @@
           }
         \end{equation*}
 
+        \begin{equation*}
+          \trfrac[E-While]{}{
+            \mathtt{while}\  t_1\ \mathtt{do}\ t_2 \rightarrow
+            \iftt{t_1}{(\mathtt{while}\  t_1\ \mathtt{do}\ t_2) \mathtt{;}\;t_2 }{\mathtt{unit}}
+          }
+        \end{equation*}
+
       \item Type Rule
+        \begin{equation*}
+          \trfrac[T-While]{
+            \Gamma \vdash t_1 : \mathtt{Unit} \qquad \Gamma \vdash t_2 : \mathtt{Unit}
+          }{
+            \Gamma \vdash \mathtt{while}\  t_1\ \mathtt{do}\ t_2 : \mathtt{Unit}
+          }
+        \end{equation*}
+
         \begin{equation*}
           \trfrac[T-While]{
             \Gamma \vdash t_1 : \mathtt{Bool} \qquad \Gamma \vdash t_2 : \mathtt{Unit}
@@ -60,17 +76,20 @@
       \item \texttt{whileFun}
         \begin{align*}
           & \mathtt{let\ rec\ whileFun} =\\
-          &\qquad \lambda x\mathtt{:Unit}.\mathtt{whileFun}\ x\ t_1\ t_2
+          &\qquad \lambda x\mathtt{:Unit}.\iftt{t_1}{(\mathtt{whileFun}\ t_2);\ x}{\mathtt{unit}}
         \end{align*}
 
       \item \texttt{whileFun2}
         \begin{align*}
-          & \mathtt{let\ rec\ whileFun} =\\
-          &\qquad \lambda x\mathtt{:Unit}.
-              \lambda t_1\mathtt{:Unit}.
-                \lambda t_2\mathtt{:Unit}.t_2\mathtt{;whileFun\ unit}\ t_1\ t_2\mathtt{;unit}
+          & \mathtt{let\ rec\ whileFun2} =\\
+          &\qquad \lambda t_1\mathtt{:Bool}.
+            \lambda t_2\mathtt{:Unit}.
+            \iftt{t_1}{(\mathtt{whileFun2}\; t_1\; t_2);\ t_2}{\mathtt{unit}}
         \end{align*}
 
+        \begin{align*}
+          \mathtt{whileFun2}\;t_1\;t_2
+        \end{align*}
     \end{enumerate}
 
 \end{document}
