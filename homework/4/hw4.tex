@@ -1,0 +1,206 @@
+\documentclass{article}
+\topmargin = 0in
+\oddsidemargin = 0in
+\evensidemargin = \oddsidemargin
+\textwidth = 6.5in
+\textheight = 8in
+\usepackage{times}
+\usepackage{bcprules}
+\usepackage{amsthm}
+\usepackage{syntax}
+\usepackage{trfrac}
+\usepackage{mathtools}
+
+\renewcommand{\syntleft}{\normalfont\itshape}
+\renewcommand{\syntright}{}
+
+\newcommand{\step}[2]{{\tt #1} $\longrightarrow$ {\tt #2}}
+\newcommand{\eval}[2]{{\tt #1} $\Downarrow$ {\tt #2}}
+\newcommand{\tc}[3]{{\tt #1} $\vdash$ {\tt #2} \ : \ {\tt #3}}
+\newcommand{\tcDef}[2]{{\tt #1}\ : \ {\tt #2}}
+
+\newcommand{\inferrule}[3]{\infrule[#1]{\mbox{#2}}{\mbox{#3}}}
+\newcommand{\inferax}[2]{\infrule[#1]{\mbox{}}{\mbox{#2}}}
+
+\newcommand{\term}[1]{{\tt t$_{#1}$}}
+\newcommand{\mathType}[2]{\mathtt{#1}:\mathtt{#2}}
+
+
+\title{Homework 3}
+
+\author{Eric Marcin-Cuddy and John Bender, CS 231}
+
+\date{November 19th, 2013}
+
+\begin{document}
+
+\maketitle
+
+\begin{enumerate}
+  \item \texttt{while} loop
+    \begin{enumerate}
+      \item Operational Semantics
+        \begin{equation*}
+          \trfrac[E-While]{
+            t_1 \rightarrow t_1'
+          }{
+            \mathtt{while}\  t_1\ \mathtt{do}\ t_2 \rightarrow
+            (\mathtt{while}\  t_1'\ \mathtt{do}\ t_2)\mathtt{;}\;t_2
+          }
+        \end{equation*}
+
+      \item Type Rule
+        \begin{equation*}
+          \trfrac[T-While]{
+            \Gamma \vdash t_1 : \mathtt{Bool} \qquad \Gamma \vdash t_2 : \mathtt{Unit}
+          }{
+            \Gamma \vdash \mathtt{while}\  t_1\ \mathtt{do}\ t_2 : \mathtt{Unit}
+          }
+        \end{equation*}
+      \item \texttt{whileFun}
+        \begin{align*}
+          & \mathtt{let\ rec\ whileFun} =\\
+          &\qquad \lambda x\mathtt{:Unit}.\mathtt{whileFun}\ x\ t_1\ t_2\mathtt{;}x
+        \end{align*}
+
+      \item \texttt{whileFun2}
+        \begin{align*}
+          & \mathtt{let\ rec\ whileFun} =\\
+          &\qquad \lambda x\mathtt{:Unit}.
+              \lambda t_1\mathtt{:Unit}.
+                \lambda t_2\mathtt{:Unit}.t_2\mathtt{;whileFun\ unit}\ t_1\ t_2\mathtt{;unit}
+        \end{align*}
+
+    \end{enumerate}
+
+  \item Preservation for Booleans and Integers
+
+
+     \newpage
+
+     \item Derive terms:
+       \begin{enumerate}
+         \item \verb|f (if x then 0 else 1)| \\
+
+           \begin{equation*}
+             \Gamma = \{ \mathType{x}{Bool}, \mathType{f}{Int \rightarrow T} \}
+           \end{equation*}
+           \begin{equation*}
+             \trfrac[T-App]{
+               \trfrac[T-Var]{
+                 \mathtt{f : Int} \rightarrow \mathtt{T} \in \Gamma
+               }{
+                 \Gamma \vdash \mathtt{f : Int} \rightarrow \mathtt{T}
+               }
+               \qquad
+               \trfrac[T-If]{
+                 \Gamma \vdash
+                 \qquad
+                 \trfrac[T-Var]{
+                   \mathType{x}{Bool} \in \Gamma
+                 }{
+                   \mathType{x}{Bool}
+                 }
+                 \qquad
+                 \trfrac[T-Num]{}{
+                   \mathType{0}{Int}
+                 }
+                 \qquad
+                 \trfrac[T-Num]{}{
+                   \mathType{1}{Int}
+                 }
+               }{
+                 \Gamma \vdash \mathtt{(if\ x\ then\ 0\ else\ 1) : Int}
+               }
+             }{
+               \Gamma \vdash \mathtt{f\ (if\ x\ then\ 0\ else\ 1) : T}
+             }
+           \end{equation*}
+
+         \item \verb|f (if (f x) then 0 else 1)| \\
+
+           \begin{equation*}
+             \Gamma = \{ \mathType{x}{Int}, \mathType{f}{Int \rightarrow Bool} \}
+           \end{equation*}
+           \begin{equation*}
+             \trfrac[T-App]{
+               \trfrac[T-Var]{
+                 \mathtt{f : Int} \rightarrow \mathtt{Bool} \in \Gamma
+               }{
+                 \Gamma \vdash \mathtt{f : Int} \rightarrow \mathtt{Bool}
+               }
+               \ \
+               \trfrac[T-If]{
+                 \Gamma \vdash
+                 \ \
+                 \trfrac[T-App]{
+                   \trfrac[T-Var]{
+                     \mathtt{f : Int} \rightarrow \mathtt{Bool} \in \Gamma
+                   }{
+                     \Gamma \vdash \mathtt{f : Int} \rightarrow \mathtt{Bool}
+                   }
+                   \ \
+                   \trfrac[T-Var]{
+                     \mathType{x}{Int} \in \Gamma
+                   }{
+                     \Gamma \vdash \mathType{x}{Int}
+                   }
+                 }{
+                   \mathType{f\ x}{Bool}
+                 }
+                 \ \
+                 \trfrac[T-Num]{}{
+                   \mathType{0}{Int}
+                 }
+                 \ \
+                 \trfrac[T-Num]{}{
+                   \mathType{1}{Int}
+                 }
+               }{
+                 \Gamma \vdash \mathtt{(if\ (f\ x)\ then\ 0\ else\ 1) : Int}
+               }
+             }{
+               \Gamma \vdash \mathtt{f\ (if\ (f\ x)\ then\ 0\ else\ 1) : Bool}
+             }
+           \end{equation*}
+
+         \item \verb|f (if (f x) then (f 0) else 1)| \\
+
+           Won't check because the type of \verb|f| would have to be \verb|Int| $\longrightarrow$ \verb|Bool| for the \term{1} of the \verb|if| and \verb|Int| $\longrightarrow$ \verb|Int| for the \term{2} simultaneously.
+       \end{enumerate}
+
+     \item Reverse soundness
+       \begin{enumerate}
+         \item Reverse Progress.
+
+           \begin{theorem}
+             If $\emptyset \vdash$ \term{}$'$\verb|:T|, there exists some \term{} such that \verb|t| $\longrightarrow$ \verb|t|$'$.
+           \end{theorem}
+
+           \begin{proof}
+             It is always the case that we can construct a term that steps to some \term{}$'$ by wrapping \term{}$'$ in a capture avoiding thunk and applying it. For example, $(\lambda$\verb|x:unit.|\term{}$')$ \verb|unit|, while ensuring \verb|x| is not free in \term{}$'$.
+           \end{proof}
+
+         \item Reverse Preservation.
+           \begin{theorem}
+             If $\emptyset \vdash$ \term{}$'$\verb|:T| and \verb|t| $\longrightarrow$ \verb|t|$'$, then $\emptyset \vdash$ \term{} \verb|:T|
+           \end{theorem}
+
+           \begin{proof}
+             We proceed by case analysis on the form of \verb|t| $\longrightarrow$ \verb|t|$'$.
+             \begin{enumerate}
+             \item E-App1: \term{} has the form \term{1} \term{2}, \term{}$'$ has the form \term{1}$'$ \term{2}, \term{1}$'$ has type \verb|T|$_2$ $\rightarrow$ \verb|T|, and \term{2} has type \verb|T|$_2$. We proceed by the last rule in \term{}$'$\verb|:T|
+               \begin{enumerate}
+                 \item T-Unit: Contradiction on the form of \term{}$'$
+                 \item T-Var: Contradiction on the form of \term{}$'$
+                 \item T-Fun: Contradiction on the form of \term{}$'$
+                 \item T-App: By the inductive hypothesis \term{1} has the type \verb|T|$_2$ $\rightarrow$ \verb|T| and \term{2} is preserved with type \verb|T|$_2$ so \term{} has type \verb|T|.
+               \end{enumerate}
+             \item E-App2: By a similar argument.
+             \item E-AppBeta: \term{} has the form $(\lambda$\verb|x:T|$_2$\verb|.y|$)$ \verb|z| the only type rule that applies is T-Fun by which we know that \term{} must be type \verb|T|$_2$ $\rightarrow$ \verb|T|.
+             \end{enumerate}
+           \end{proof}
+
+       \end{enumerate}
+     \end{enumerate}
+\end{document}
