@@ -42,30 +42,13 @@
     \begin{enumerate}
       \item Operational Semantics
         \begin{equation*}
-          \trfrac[E-While]{
-            t_1 \rightarrow t_1'
-          }{
-            \mathtt{while}\  t_1\ \mathtt{do}\ t_2 \rightarrow
-            (\mathtt{while}\  t_1'\ \mathtt{do}\ t_2)\mathtt{;}\;t_2
-          }
-        \end{equation*}
-
-        \begin{equation*}
           \trfrac[E-While]{}{
             \mathtt{while}\  t_1\ \mathtt{do}\ t_2 \rightarrow
-            \iftt{t_1}{(\mathtt{while}\  t_1\ \mathtt{do}\ t_2) \mathtt{;}\;t_2 }{\mathtt{unit}}
+            \iftt{t_1}{t_2;(\mathtt{while}\  t_1\ \mathtt{do}\ t_2)}{\mathtt{unit}}
           }
         \end{equation*}
 
       \item Type Rule
-        \begin{equation*}
-          \trfrac[T-While]{
-            \Gamma \vdash t_1 : \mathtt{Unit} \qquad \Gamma \vdash t_2 : \mathtt{Unit}
-          }{
-            \Gamma \vdash \mathtt{while}\  t_1\ \mathtt{do}\ t_2 : \mathtt{Unit}
-          }
-        \end{equation*}
-
         \begin{equation*}
           \trfrac[T-While]{
             \Gamma \vdash t_1 : \mathtt{Bool} \qquad \Gamma \vdash t_2 : \mathtt{Unit}
@@ -91,5 +74,72 @@
           \mathtt{whileFun2}\;t_1\;t_2
         \end{align*}
     \end{enumerate}
+  \item Type Inference
+    \begin{enumerate}
+      \item Derivation
+        \begin{align*}
+          & \Gamma = \emptyset, x:X, y:Y, z:Z \\
+          & \Phi = \{X = Z \rightarrow M\} \cup \{Y = Z \rightarrow N\} \cup \{M = N \rightarrow O\} \\
+          & \trfrac[CT-Abs]{
+            \trfrac[CT-Abs]{
+              \trfrac[CT-Abs]{
+                \trfrac[CT-Abs]{
+                  \trfrac[CT-App]{
+                    \trfrac[CT-Var]{
+                      x : X \in \Gamma
+                    }{
+                      \Gamma \vdash x : X\ |\ \{\}
+                    }
+                    \qquad
+                    \trfrac[CT-Var]{
+                      z : Z \in \Gamma
+                    }{
+                      \Gamma \vdash z : Z\ |\ \{\}
+                    }
+                  }{
+                    \Gamma \vdash (x\ z) : M \ |\ \{\} \cup \{\} \cup \{X = Z \rightarrow M\}
+                  }
+                  \qquad
+                  \trfrac[CT-App]{
+                    \trfrac[CT-Var]{
+                      y : Y \in \Gamma
+                    }{
+                      \Gamma \vdash y : Y\ |\ \{\}
+                    }
+                    \qquad
+                    \trfrac[CT-Var]{
+                      z : Z \in \Gamma
+                    }{
+                      \Gamma \vdash z : Z\ |\ \{\}
+                    }
+                  }{
+                    \Gamma \vdash (y\ z) : N \ |\ \{\} \cup \{\} \cup \{Y = Z \rightarrow N\}
+                  }
+                }{
+                  \Gamma \vdash (x\ z)\ (y\ z) : O\ |\ \Phi
+                }
+              }{
+                \emptyset, x:X, y:Y \vdash \lambda z:Z.((x\ z)\ (y\ z)) : Z \rightarrow O \ |\ \Phi
+              }
+            }{
+              \emptyset, x:X \vdash \lambda y:Y.\lambda z:Z.((x\ z)\ (y\ z)) : Y \rightarrow (Z \rightarrow O)\ |\ \Phi
+            }
+          }{
+            \emptyset \vdash \lambda x:X.\lambda y:Y.\lambda z:Z.((x\ z)\ (y\ z)) : X \rightarrow (Y \rightarrow (Z \rightarrow O))\ |\ \Phi
+          }
+        \end{align*}
+
+        \item Substitution
+          \begin{align*}
+            & \sigma = \lambda t.[Z \mapsto P][Y \mapsto (P \rightarrow N)][X \mapsto (P \rightarrow (N \rightarrow O))]t \\ \\
+            & \sigma(X \rightarrow (Y \rightarrow (Z \rightarrow O))) = \\
+            & \qquad (P \rightarrow (N \rightarrow O)) \rightarrow ((P \rightarrow N) \rightarrow (P \rightarrow O)) \\ \\
+            & \sigma(\lambda x:X.\lambda y:Y.\lambda z:Z.((x\ z)\ (y\ z)) = \\
+            & \qquad \lambda x:(P \rightarrow (N \rightarrow O)).
+                     \lambda y:(P \rightarrow N).
+                     \lambda z:P.((x\ z)\ (y\ z)
+          \end{align*}
+        \end{enumerate}
+  \end{enumerate}
 
 \end{document}
