@@ -88,7 +88,7 @@
                     \trfrac[CT-Var]{
                       x : X \in \Gamma
                     }{
-                      \Gamma \vdash x : X\ |\ \{\}
+                       \Gamma \vdash x : X\ |\ \{\}
                     }
                     \qquad
                     \trfrac[CT-Var]{
@@ -140,6 +140,36 @@
                      \lambda z:P.((x\ z)\ (y\ z)
           \end{align*}
         \end{enumerate}
+
+      \item Unions
+
+        \begin{equation*}
+          \trfrac[]{
+            \Gamma \vdash t : T_1\ |\ C \qquad fresh(T),fresh(X)
+          }{
+            \Gamma \vdash \mathtt{left}\ t : T\ |\ C \cup \{ T = T_1 + X\}
+          }
+        \end{equation*}
+
+        \begin{equation*}
+          \trfrac[]{
+            \Gamma \vdash t : T_2\ |\ C \qquad fresh(T),fresh(X)
+          }{
+            \Gamma \vdash \mathtt{right}\ t : T\ |\ C \cup \{ T = X + T_2\}
+          }
+        \end{equation*}
+
+        \begin{equation*}
+          \trfrac[]{
+            \Gamma \vdash t_1 : T_1\ |\ C_1 \qquad
+            \Gamma,x:X \vdash t_2 : T_2\ |\ C_2 \qquad
+            \Gamma,y:Y \vdash t_3 : T_3\ |\ C_3 \qquad
+            fresh(T)
+          }{
+            \Gamma \vdash \mathtt{match}\ t_1\ \mathtt{with\ left}\ x \rightarrow t_2\ |\ \mathtt{right}\ y \rightarrow t_3 : T\ |\ C_1 \cup C_2 \cup C_3 \cup \{ T_1 = X + Y,\ T_2 = T_3 = T\}
+          }
+        \end{equation*}
+
   \end{enumerate}
 
 \end{document}
