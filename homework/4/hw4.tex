@@ -59,7 +59,7 @@
       \item \texttt{whileFun}
         \begin{align*}
           & \mathtt{let\ rec\ whileFun} =\\
-          &\qquad \lambda x\mathtt{:Unit}.\iftt{t_1}{(\mathtt{whileFun}\ t_2);\ x}{\mathtt{unit}}
+          &\qquad \lambda x\mathtt{:Unit}.\iftt{t_1}{x;(\mathtt{whileFun}\ t_2)}{\mathtt{unit}}
         \end{align*}
 
       \item \texttt{whileFun2}
@@ -67,7 +67,7 @@
           & \mathtt{let\ rec\ whileFun2} =\\
           &\qquad \lambda t_1\mathtt{:Bool}.
             \lambda t_2\mathtt{:Unit}.
-            \iftt{t_1}{(\mathtt{whileFun2}\; t_1\; t_2);\ t_2}{\mathtt{unit}}
+            \iftt{t_1}{t_2;(\mathtt{whileFun2}\; t_1\; t_2)}{\mathtt{unit}}
         \end{align*}
 
         \begin{align*}
@@ -141,7 +141,7 @@
           \end{align*}
         \end{enumerate}
 
-      \item Unions
+      \item Union inference
 
         \begin{equation*}
           \trfrac[]{
@@ -169,6 +169,37 @@
             \Gamma \vdash \mathtt{match}\ t_1\ \mathtt{with\ left}\ x \rightarrow t_2\ |\ \mathtt{right}\ y \rightarrow t_3 : T\ |\ C_1 \cup C_2 \cup C_3 \cup \{ T_1 = X + Y,\ T_2 = T_3 = T\}
           }
         \end{equation*}
+
+
+      \item Type Application
+        \begin{enumerate}
+        \item $\Gamma = \emptyset$ \\
+          $\mathtt{t} = (\lambda\mathtt{X}. \; \lambda\mathtt{x}:\mathtt{X}. \mathtt{x}) \; [\forall\mathtt{X}. \; \mathtt{X} \to \mathtt{X}] \; (\lambda\mathtt{X}. \; \lambda\mathtt{x}:\mathtt{X}. \; \mathtt{x})$ \\
+          $\mathtt{T} = \forall\mathtt{X}. \; \mathtt{X} \to \mathtt{X}$
+
+          % PROBLEM 4b
+        \item $\Gamma = \{ \mathtt{twice} : \forall\mathtt{X}. \; (\mathtt{X} \to \mathtt{X}) \to \mathtt{X} \to \mathtt{X} \}$ \\
+          $\mathtt{t} = \mathtt{twice} \; [\mathtt{Unit}] \; (\lambda\mathtt{x}:\mathtt{Unit}. \; \mathtt{x}) \; \mathtt{unit}$ \\
+          $\mathtt{T} = \mathtt{Unit}$
+
+          % PROBLEM 4c
+        \item $\Gamma = \{ \mathtt{twice} : \forall\mathtt{X}. \; (\mathtt{X} \to \mathtt{X}) \to \mathtt{X} \to \mathtt{X} \}$ \\
+          $\mathtt{t} = \mathtt{twice} \; [??] \; \mathtt{twice} \; [??]$ \\
+          $\mathtt{T} = $ no such type
+
+          % PROBLEM 4d
+        \item $\Gamma = \{ \mathtt{twice} : \forall\mathtt{X}. \; (\mathtt{X} \to \mathtt{X}) \to \mathtt{X} \to \mathtt{X} \}$ \\
+          $\mathtt{t} = \mathtt{twice} \; [\mathtt{S} \to \mathtt{S}] \; (\mathtt{twice} \; [\mathtt{S}])$ \\
+          $\mathtt{T} = (\mathtt{S} \to \mathtt{S}) \to \mathtt{S} \to \mathtt{S}$
+
+          % PROBLEM 4e
+        \item $\Gamma = \{ \mathtt{twice} : \forall\mathtt{X}. \; (\mathtt{X} \to \mathtt{X}) \to \mathtt{X} \to \mathtt{X} \}$ \\
+          $\mathtt{t} = \mathtt{twice} \; [(\mathtt{S} \to \mathtt{S}) \to \mathtt{S} \to \mathtt{S}] \; (\mathtt{twice} \; [\mathtt{S} \to \mathtt{S}]) \; (\mathtt{twice} \; [\mathtt{S}])$ \\
+          $\mathtt{T} = (\mathtt{S} \to \mathtt{S}) \to \mathtt{S} \to \mathtt{S}$
+
+
+        \end{enumerate}
+
 
   \end{enumerate}
 
