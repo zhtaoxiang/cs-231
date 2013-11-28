@@ -1,0 +1,162 @@
+\documentclass[12pt,letterpaper]{article}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Packages
+
+\usepackage[margin=1in]{geometry}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage{bcprules}
+\usepackage{amsbsy,amsfonts,amsmath,amssymb,amsxtra,latexsym,mathtools}
+\usepackage{proof}
+\usepackage{trfrac}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Title page
+
+\title{COM SCI 231 Homework \#5}
+\author{John Bender and Eric Marcin-Cuddy}
+\date{due December 3, 2013}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Begin
+
+\begin{document}
+
+\maketitle
+
+\begin{enumerate}
+
+  % PROBLEM 1
+  \item Refs
+    \begin{enumerate}
+      \item \texttt{(\ldots ) = (r := 42)}
+
+      \item \texttt{(\ldots ) = (r := 42; ref 0)}
+
+      \item \texttt{(\ldots ) = (let r = ref 5 in ($\lambda$x.(r := (!r + 1); !r)))}
+    \end{enumerate}
+
+ \item Proofs
+   \begin{enumerate}
+
+  % PROBLEM 2a
+  \item \textbf{Theorem} \quad If $\varnothing \,|\, \Sigma \vdash t : T$ and $\varnothing \,|\, \Sigma \vdash \mu$, then either $t$ is a value or there exists a term $t^\prime$ and a store $\mu^\prime$ such that $t \,|\, \mu \to t^\prime \,|\, \mu^\prime$.\\
+    \textbf{Proof} \quad By induction on the derivation of $\varnothing \,|\, \Sigma \vdash t : T$. Case analysis of the last rule used in the derivation.
+      \begin{itemize}
+      \item Case \textsc{T-Deref}: Then $t = \;!t_1$, $\varnothing \,|\, \Sigma \vdash t_1 : \text{Ref } T_1$, and $T=T_1$. By the induction hypothesis, either $t_1$ is a value or there exists a term $t_1^\prime$ and a store $\mu_1^\prime$ such that $t_1 \,|\, \mu \to t_1^\prime \,|\, \mu_1^\prime$.
+        \begin{itemize}
+        \item Case $t_1 \,|\, \mu \to t_1^\prime \,|\, \mu_1^\prime$: Then $t$ steps by \textsc{E-Deref}.
+        \item Case $t_1$ is a value: By the Canonical Forms (Ref) Lemma, $t_1$ is a location $\ell$. By \textsc{T-Loc}, $\ell \in \text{dom}(\Sigma)$. Since $\varnothing \,|\, \Sigma \vdash \mu$, $\ell \in \text{dom}(\mu)$. Then $t$ steps by \textsc{E-DerefLoc}.
+        \end{itemize}
+      \end{itemize}
+
+  % PROBLEM 2b
+  \item \textbf{Theorem} \quad If $\varnothing \,|\, \Sigma \vdash t : T$, $\varnothing \,|\, \Sigma \vdash \mu$, and $t \,|\, \mu \to t^\prime \,|\, \mu^\prime$, then there exists a $\Sigma^\prime$ such that $\Sigma^\prime \supseteq \Sigma$, $\varnothing \,|\, \Sigma^\prime \vdash t^\prime : T$, and $\varnothing \,|\, \Sigma^\prime \vdash \mu^\prime$.\\
+    \textbf{Proof} \quad By induction on the derivation of $\varnothing \,|\, \Sigma \vdash t : T$. Case analysis of the last rule used in the derivation.
+      \begin{itemize}
+      \item Case \textsc{T-Ref}: Then $t = \text{ref }t_1$, $\varnothing \,|\, \Sigma \vdash t_1 : T_1$, and $T = \text{Ref }T_1$. Case analysis on the last rule used in the derivation of $t \,|\, \mu \to t^\prime \,|\, \mu^\prime$.
+        \begin{itemize}
+        \item Case \textsc{E-Ref}: Then $t_1 \,|\, \mu \to t_1^\prime \,|\, \mu^\prime$ and $t^\prime = \text{ref }t_1^\prime$. By the induction hypothesis, there exists a $\Sigma^\prime$ such that $\Sigma^\prime \supseteq \Sigma$, $\varnothing \,|\, \Sigma^\prime \vdash t_1^\prime : T_1$, and $\varnothing \,|\, \Sigma^\prime \vdash \mu^\prime$. Then $\varnothing \,|\, \Sigma^\prime \vdash \text{ref }t_1^\prime : \text{Ref }T_1$ by \textsc{T-Ref}.
+        \item Case \textsc{E-RefV}: Then $t_1$ is a value $v_1$, $t^\prime$ is a location $\ell \notin \text{dom}(\mu)$, and $\mu^\prime = \mu \cup \{ \ell \mapsto v_1 \}$. Let $\Sigma^\prime = \Sigma$. Show the following:
+          \begin{itemize}
+          \item $\varnothing \,|\, \Sigma \vdash \ell : \text{Ref }T_1$: Holds by \textsc{T-Loc}.
+          \item $\varnothing \,|\, \Sigma \vdash \mu^\prime$:
+          \end{itemize}
+        \end{itemize}
+      \end{itemize}
+
+  \end{enumerate}
+
+% PROBLEM 3
+\item Freeing Refs
+  \begin{enumerate}
+
+  \item 3a
+
+  \item 3b
+
+  \item 3c
+
+  \end{enumerate}
+
+% PROBLEM 4
+\item
+  \begin{enumerate}
+
+  % PROBLEM 4a
+  \item Augmented Type Rules
+
+    \begin{equation*}
+      \trfrac[T-Throw]{}{
+        \Gamma \vdash \mathtt{throw : T}\ |\ \{ exn \}
+      }
+    \end{equation*}
+
+    Requires that $t_1$ throw:
+
+    \begin{equation*}
+      \trfrac[T-TryCatch]{
+        \Gamma \vdash t_1\mathtt{ : T}\ |\ \Phi_1 \qquad
+        \Gamma \vdash t_2\ \mathtt{: T}\ |\ \Phi_2 \qquad
+        exn \in \Phi_1
+      }{
+        \Gamma \vdash \mathtt{try}\ t_1\ \mathtt{catch}\ t_2\ \mathtt{: T}\ |\
+        (\Phi_1 \setminus \{ exn \}) \cup \Phi_2
+      }
+    \end{equation*}
+
+    Does not require that $t_1$ throw:
+
+    \begin{equation*}
+      \trfrac[T-TryCatch]{
+        \Gamma \vdash t_1\mathtt{ : T}\ |\ \Phi_1 \qquad
+        \Gamma \vdash t_2\ \mathtt{: T}\ |\ \Phi_2
+      }{
+        \Gamma \vdash \mathtt{try}\ t_1\ \mathtt{catch}\ t_2\ \mathtt{: T}\ |\
+        (\Phi_1 \setminus \{ exn \}) \cup \Phi_2
+      }
+    \end{equation*}
+
+
+  % PROBLEM 4b
+  \item Derivation
+  \end{enumerate}
+
+\end{enumerate}
+
+
+    \begingroup
+    \fontsize{9pt}\selectfont
+    \begin{equation*}
+      \trfrac[T-TryCatch]{
+        \trfrac[T-App]{
+          \trfrac[T-Abs]{
+            \trfrac[T-Throw]{}{
+              \emptyset, \mathtt{x:Bool} \vdash \mathtt{throw : Bool}\ |\ \{ exn \}
+            }
+          }{
+            \emptyset \vdash \mathtt{(\lambda x:Bool.throw)}:\ \mathtt{Bool} \overset{\{ exn \}}{\rightarrow}\ \mathtt{Bool}\ |\ \{\}
+          }
+          \qquad
+          \trfrac[T-True]{}{
+            \emptyset \vdash \mathtt{true : Bool}\ |\ \{\}
+          }
+        }{
+          \emptyset \vdash \mathtt{((\lambda x:Bool.throw)\ true)} : \mathtt{Bool}\ |\ \{ exn \} \cup \{\} \cup \{\}
+        }
+        \qquad
+        \trfrac[T-False]{}{
+          \emptyset \vdash \mathtt{false : Bool}\ |\ \{\}
+        }
+      }{
+        \emptyset \vdash \mathtt{try\ ((\lambda x:Bool.throw)\ true)\ catch\ false} : \mathtt{Bool}\ |\ \{\}
+      }
+    \end{equation*}
+    \endgroup
+
+
+\end{document}
+
+%%% End
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
