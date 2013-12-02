@@ -1,0 +1,4 @@
+* questions
+** assume refs for 1a, infinite loop, or loop until t1 is a value
+** 2b, choose arbitrary types or type variables
+** 3 other half of left and right type rules arbitrary, requires fresh?

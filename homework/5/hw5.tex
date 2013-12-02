@@ -44,7 +44,7 @@
   \item \textbf{Theorem} \quad If $\varnothing \,|\, \Sigma \vdash t : T$ and $\varnothing \,|\, \Sigma \vdash \mu$, then either $t$ is a value or there exists a term $t^\prime$ and a store $\mu^\prime$ such that $t \,|\, \mu \to t^\prime \,|\, \mu^\prime$.\\
     \textbf{Proof} \quad By induction on the derivation of $\varnothing \,|\, \Sigma \vdash t : T$. Case analysis of the last rule used in the derivation.
       \begin{itemize}
-      \item Case \textsc{T-Deref}: Then $t = \;!t_1$, $\varnothing \,|\, \Sigma \vdash t_1 : \text{Ref } T_1$, and $T=T_1$. By the induction hypothesis, either $t_1$ is a value or there exists a term $t_1^\prime$ and a store $\mu_1^\prime$ such that $t_1 \,|\, \mu \to t_1^\prime \,|\, \mu_1^\prime$.
+      \item Case \textsc{T-Deref}: Then $t = \;!t_1$, $\varnothing \,|\, \Sigma \vdash t_1 : \mathtt{Ref}\ T_1$, and $T=T_1$. By the induction hypothesis, either $t_1$ is a value or there exists a term $t_1^\prime$ and a store $\mu_1^\prime$ such that $t_1 \,|\, \mu \to t_1^\prime \,|\, \mu_1^\prime$.
         \begin{itemize}
         \item Case $t_1 \,|\, \mu \to t_1^\prime \,|\, \mu_1^\prime$: Then $t$ steps by \textsc{E-Deref}.
         \item Case $t_1$ is a value: By the Canonical Forms (Ref) Lemma, $t_1$ is a location $\ell$. By \textsc{T-Loc}, $\ell \in \text{dom}(\Sigma)$. Since $\varnothing \,|\, \Sigma \vdash \mu$, $\ell \in \text{dom}(\mu)$. Then $t$ steps by \textsc{E-DerefLoc}.
@@ -55,28 +55,35 @@
   \item \textbf{Theorem} \quad If $\varnothing \,|\, \Sigma \vdash t : T$, $\varnothing \,|\, \Sigma \vdash \mu$, and $t \,|\, \mu \to t^\prime \,|\, \mu^\prime$, then there exists a $\Sigma^\prime$ such that $\Sigma^\prime \supseteq \Sigma$, $\varnothing \,|\, \Sigma^\prime \vdash t^\prime : T$, and $\varnothing \,|\, \Sigma^\prime \vdash \mu^\prime$.\\
     \textbf{Proof} \quad By induction on the derivation of $\varnothing \,|\, \Sigma \vdash t : T$. Case analysis of the last rule used in the derivation.
       \begin{itemize}
-      \item Case \textsc{T-Ref}: Then $t = \text{ref }t_1$, $\varnothing \,|\, \Sigma \vdash t_1 : T_1$, and $T = \text{Ref }T_1$. Case analysis on the last rule used in the derivation of $t \,|\, \mu \to t^\prime \,|\, \mu^\prime$.
+      \item Case \textsc{T-Ref}: Then $t = \mathtt{ref}\ t_1$, $\varnothing \,|\, \Sigma \vdash t_1 : T_1$, and $T = \mathtt{Ref}\ T_1$. Case analysis on the last rule used in the derivation of $t \,|\, \mu \to t^\prime \,|\, \mu^\prime$.
         \begin{itemize}
-        \item Case \textsc{E-Ref}: Then $t_1 \,|\, \mu \to t_1^\prime \,|\, \mu^\prime$ and $t^\prime = \text{ref }t_1^\prime$. By the induction hypothesis, there exists a $\Sigma^\prime$ such that $\Sigma^\prime \supseteq \Sigma$, $\varnothing \,|\, \Sigma^\prime \vdash t_1^\prime : T_1$, and $\varnothing \,|\, \Sigma^\prime \vdash \mu^\prime$. Then $\varnothing \,|\, \Sigma^\prime \vdash \text{ref }t_1^\prime : \text{Ref }T_1$ by \textsc{T-Ref}.
-        \item Case \textsc{E-RefV}: Then $t_1$ is a value $v_1$, $t^\prime$ is a location $\ell \notin \text{dom}(\mu)$, and $\mu^\prime = \mu \cup \{ \ell \mapsto v_1 \}$. Let $\Sigma^\prime = \Sigma$. Show the following:
-          \begin{itemize}
-          \item $\varnothing \,|\, \Sigma \vdash \ell : \text{Ref }T_1$: Holds by \textsc{T-Loc}.
-          \item $\varnothing \,|\, \Sigma \vdash \mu^\prime$:
-          \end{itemize}
+        \item Case \textsc{E-Ref}: Then $t_1 \,|\, \mu \to t_1^\prime \,|\, \mu^\prime$ and $t^\prime = \mathtt{ref}\ t_1^\prime$. By the induction hypothesis, there exists a $\Sigma^\prime$ such that $\Sigma^\prime \supseteq \Sigma$, $\varnothing \,|\, \Sigma^\prime \vdash t_1^\prime : T_1$, and $\varnothing \,|\, \Sigma^\prime \vdash \mu^\prime$. Then $\varnothing \,|\, \Sigma^\prime \vdash \mathtt{ref}\ t_1^\prime : \mathtt{Ref}\ T_1$ by \textsc{T-Ref}.
+        \item Case \textsc{E-RefV}: Then $t_1$ is a value $v_1$ with type $T_1$, $t^\prime$ is a location $\ell \notin \text{dom}(\mu)$, and $\mu^\prime = \mu \cup \{ \ell \mapsto v_1 \}$. We know that $\varnothing\ |\ \Sigma' \vdash \mu'$ means $\Sigma' \supseteq \Sigma$ because $l \notin dom(\mu)$, and we know that a $\varnothing\ |\ \Sigma' \vdash t' : T$ (which is $\mathtt{Ref}\ T_1$) by T-Loc and the type for $v_1$ which is $T_1$.
         \end{itemize}
       \end{itemize}
-
   \end{enumerate}
+
+\newpage
 
 % PROBLEM 3
 \item Freeing Refs
   \begin{enumerate}
 
-  \item 3a
+  \item $\mathtt{let}\ x = \mathtt{ref}\ 0\ \mathtt{in\ free}\ x;\ \mathtt{free}\ x$
 
-  \item 3b
+  \item Still holds.
 
-  \item 3c
+  \item Counter Example:
+    \begin{align*}
+      \Sigma     &= \{ l : \mathtt{Int} \} \\
+      \mu        &= \{ l : 0 \} \\
+      t          &= \mathtt{free}\ l;\mathtt{free}\ l \\
+      \mathtt{T} &= \mathtt{Unit} \\
+      \mu'       &= \{ \} \\
+      t'         &= \mathtt{unit};\mathtt{free}\ l \\
+    \end{align*}
+
+
 
   \end{enumerate}
 
@@ -92,21 +99,6 @@
         \Gamma \vdash \mathtt{throw : T}\ |\ \{ exn \}
       }
     \end{equation*}
-
-    Requires that $t_1$ throw:
-
-    \begin{equation*}
-      \trfrac[T-TryCatch]{
-        \Gamma \vdash t_1\mathtt{ : T}\ |\ \Phi_1 \qquad
-        \Gamma \vdash t_2\ \mathtt{: T}\ |\ \Phi_2 \qquad
-        exn \in \Phi_1
-      }{
-        \Gamma \vdash \mathtt{try}\ t_1\ \mathtt{catch}\ t_2\ \mathtt{: T}\ |\
-        (\Phi_1 \setminus \{ exn \}) \cup \Phi_2
-      }
-    \end{equation*}
-
-    Does not require that $t_1$ throw:
 
     \begin{equation*}
       \trfrac[T-TryCatch]{
